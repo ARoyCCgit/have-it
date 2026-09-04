@@ -1,0 +1,341 @@
+@import "tailwindcss";
+
+:root {
+  --brand-primary: #03cafc;
+  --brand-primary-hover: #029ecc;
+  --brand-primary-glow: rgba(3, 202, 252, 0.35);
+  --brand-primary-subtle: rgba(3, 202, 252, 0.12);
+
+  /* Light Theme Defaults for Admin */
+  --bg-admin-main: #f8fafc;
+  --bg-admin-card: #ffffff;
+  --bg-admin-sidebar: #ffffff;
+  --bg-admin-header: #ffffff;
+  --border-admin: #e2e8f0;
+  --text-admin-main: #0f172a;
+  --text-admin-muted: #64748b;
+}
+
+html.dark, [data-theme="dark"] {
+  /* Dark Theme for Admin */
+  --bg-admin-main: #080e12;
+  --bg-admin-card: #111b21;
+  --bg-admin-sidebar: #0d151a;
+  --bg-admin-header: #111b21;
+  --border-admin: #1e293b;
+  --text-admin-main: #f8fafc;
+  --text-admin-muted: #94a3b8;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg-admin-main);
+  color: var(--text-admin-main);
+}
+
+/* Custom Scrollbar for Admin Tables & Panels */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(3, 202, 252, 0.2);
+  border-radius: 4px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(3, 202, 252, 0.5);
+}
+
+/* =========================================================================
+   Universal 3-Mode Theme Adaptive Overrides for Admin (Light Mode)
+   ========================================================================= */
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* 1. Surfaces & Cards */
+html.light .bg-slate-950,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-950\/40 {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-slate-900,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/90 {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-slate-900\/60,
+html.light .bg-slate-850,
+html.light .bg-slate-800 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light aside {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .bg-gradient-to-r {
+  background-image: linear-gradient(to right, #ffffff, #f8fafc, #f1f5f9) !important;
+}
+
+/* 2. Borders */
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light .border-slate-700,
+html.light .border-slate-700\/80,
+html.light .border-slate-700\/60 {
+  border-color: #cbd5e1 !important;
+}
+
+/* 3. Typography (High-Contrast for Light Mode) */
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light p,
+html.light label {
+  color: #0f172a;
+}
+
+html.light .text-white:not([class*="bg-rose"]):not([class*="bg-emerald"]):not([class*="bg-black"]):not([class*="bg-blue"]):not(pre *):not(.preview-dark-canvas *) {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-200 {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-300:not(pre *):not(.preview-dark-canvas *) {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400:not(pre *):not(.preview-dark-canvas *) {
+  color: #64748b !important;
+}
+
+html.light .text-slate-500:not(pre *):not(.preview-dark-canvas *) {
+  color: #94a3b8 !important;
+}
+
+/* Sky/Cyan Contrast Adaptation on Light Backgrounds */
+html.light .text-\[\#03cafc\]:not(pre *):not(.preview-dark-canvas *):not(button.bg-\[\#03cafc\] *) {
+  color: #0284c7 !important;
+}
+
+/* Status Text High Contrast */
+html.light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+html.light .text-amber-400 {
+  color: #b45309 !important;
+}
+
+html.light .text-purple-400 {
+  color: #7e22ce !important;
+}
+
+html.light .text-rose-400 {
+  color: #e11d48 !important;
+}
+
+html.light .text-rose-200 {
+  color: #9f1239 !important;
+}
+
+html.light .text-sky-400 {
+  color: #0284c7 !important;
+}
+
+html.light .text-amber-300,
+html.light .text-amber-300\/90 {
+  color: #92400e !important;
+}
+
+/* 4. Status Badges & Pills */
+html.light .bg-emerald-950\/40,
+html.light .bg-emerald-950\/30 {
+  background-color: #d1fae5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+html.light .bg-rose-950\/40,
+html.light .bg-rose-950\/30,
+html.light .bg-rose-950\/20 {
+  background-color: #ffe4e6 !important;
+  border-color: #fecdd3 !important;
+}
+
+html.light .bg-purple-950\/40,
+html.light .bg-purple-950\/30 {
+  background-color: #f3e8ff !important;
+  border-color: #e9d5ff !important;
+}
+
+html.light .bg-amber-950\/40,
+html.light .bg-amber-950\/30 {
+  background-color: #fef3c7 !important;
+  border-color: #fde68a !important;
+}
+
+html.light .bg-sky-500\/10,
+html.light .bg-\[\#03cafc\]\/15,
+html.light .bg-\[\#03cafc\]\/20 {
+  background-color: #e0f2fe !important;
+  border-color: #bae6fd !important;
+}
+
+html.light .bg-emerald-500\/10 {
+  background-color: #dcfce7 !important;
+  border-color: #bbf7d0 !important;
+}
+
+html.light .bg-purple-500\/10 {
+  background-color: #f3e8ff !important;
+  border-color: #e9d5ff !important;
+}
+
+html.light .bg-amber-500\/10 {
+  background-color: #fef3c7 !important;
+  border-color: #fde68a !important;
+}
+
+html.light .bg-rose-500\/10 {
+  background-color: #ffe4e6 !important;
+  border-color: #fecdd3 !important;
+}
+
+/* 5. Buttons, Tabs & Inputs */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Inactive Tab Buttons in Light Mode */
+html.light button.bg-slate-900,
+html.light button.bg-slate-950 {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+html.light button.bg-slate-900:hover,
+html.light button.bg-slate-950:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Preserve white text on solid colored buttons and dark overlays */
+html.light .bg-rose-600,
+html.light .bg-rose-500,
+html.light .bg-emerald-600,
+html.light .bg-emerald-500,
+html.light .bg-black\/60,
+html.light .bg-black\/70,
+html.light .bg-black\/80 {
+  color: #ffffff !important;
+}
+
+html.light .bg-rose-600 *,
+html.light .bg-rose-500 *,
+html.light .bg-emerald-600 *,
+html.light .bg-emerald-500 *,
+html.light .bg-black\/60 *,
+html.light .bg-black\/70 *,
+html.light .bg-black\/80 * {
+  color: #ffffff !important;
+}
+
+/* Primary Brand Cyan Buttons */
+html.light button.bg-\[\#03cafc\],
+html.light a.bg-\[\#03cafc\] {
+  color: #0f172a !important;
+}
+
+/* Toggle Switches Track in Light Mode */
+html.light .peer ~ div {
+  background-color: #cbd5e1 !important; /* Visible Slate-300 track */
+}
+
+html.light .peer:checked ~ div {
+  background-color: #0284c7 !important; /* Sky-600 active track */
+}
+
+html.light .peer:checked.peer-checked\:bg-rose-600 ~ div {
+  background-color: #e11d48 !important; /* Rose-600 active track */
+}
+
+/* 6. Code Blocks & cURL Inspector in Light Mode (Keep Rich Dark Canvas) */
+html.light pre {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+  border-color: #1e293b !important;
+}
+
+html.light pre .text-\[\#03cafc\],
+html.light pre code,
+html.light pre span {
+  color: #38bdf8 !important; /* Sky-400 inside dark code block */
+}
+
+/* 7. Hovers & Table Rows */
+html.light .hover\:bg-slate-900:hover {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-800\/40:hover,
+html.light .hover\:bg-slate-800\/30:hover {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .hover\:bg-slate-700:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* 8. Skeletons */
+.skeleton {
+  background-color: rgba(30, 41, 59, 0.7);
+}
+
+html.light .skeleton,
+[data-theme="light"] .skeleton {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+}

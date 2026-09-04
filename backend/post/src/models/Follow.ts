@@ -1,0 +1,42 @@
+import mongoose, { Document, Schema, Types } from "mongoose";
+
+export interface IFollow extends Document {
+    _id: Types.ObjectId;
+    follower: Types.ObjectId;
+    following: Types.ObjectId;
+    status: "accepted" | "pending";
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const FollowSchema = new Schema<IFollow>(
+    {
+        follower: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+            index: true,
+        },
+        following: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+            index: true,
+        },
+        status: {
+            type: String,
+            enum: ["accepted", "pending"],
+            default: "accepted",
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+// Prevent duplicate follow relationships and index for quick reverse-lookup
+FollowSchema.index({ follower: 1, following: 1 }, { unique: true });
+FollowSchema.index({ following: 1, status: 1 });
+FollowSchema.index({ follower: 1, status: 1 });
+
+export const Follow = mongoose.model<IFollow>("Follow", FollowSchema);
