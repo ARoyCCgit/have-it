@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^1.12.2",
     "cloudinary": "^1.41.3",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -33,7 +34,10 @@
     "@types/mongoose": "^5.11.96",
     "@types/multer": "^2.0.0",
     "concurrently": "^9.2.1",
-    "cors": "^2.8.6",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "typescript": "^5.7.3"
+  },
+  "allowScripts": {
+    "core-js@3.45.1": true
   }
 }

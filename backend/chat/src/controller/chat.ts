@@ -20,7 +20,8 @@ async function fetchUserProfile(userId: string) {
         const userServiceUrl = getUserServiceUrl();
         const { data } = await axios.get(`${userServiceUrl}/api/v1/user/${userId}`);
         return (data && data._id) ? data : { _id: userId, name: data?.name || "Contact" };
-    } catch {
+    } catch (err: any) {
+        console.warn(`[chat-service] Could not fetch profile for user ${userId} from ${getUserServiceUrl()}:`, err?.message || err);
         return { _id: userId, name: "Contact" };
     }
 }

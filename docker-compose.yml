@@ -1,0 +1,125 @@
+
+networks:
+  haveit-network:
+    driver: bridge
+
+services:
+  # Infrastructure: Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: haveit-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - haveit-network
+
+  # Infrastructure: RabbitMQ Broker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: haveit-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - haveit-network
+
+  # Microservice: User & Auth
+  user-service:
+    build:
+      context: ./backend/user
+      dockerfile: Dockerfile
+    container_name: haveit-user-service
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/user/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    networks:
+      - haveit-network
+
+  # Microservice: Mail Notifications
+  mail-service:
+    build:
+      context: ./backend/mail
+      dockerfile: Dockerfile
+    container_name: haveit-mail-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./backend/mail/.env
+    depends_on:
+      - rabbitmq
+    networks:
+      - haveit-network
+
+  # Microservice: Chat & WebSockets
+  chat-service:
+    build:
+      context: ./backend/chat
+      dockerfile: Dockerfile
+    container_name: haveit-chat-service
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./backend/chat/.env
+    environment:
+      - USER_SERVICE=http://user-service:5000
+    networks:
+      - haveit-network
+
+  # Microservice: Posts, Stories & Reels
+  post-service:
+    build:
+      context: ./backend/post
+      dockerfile: Dockerfile
+    container_name: haveit-post-service
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./backend/post/.env
+    environment:
+      - USER_SERVICE=http://user-service:5000
+      - CHAT_SERVICE=http://chat-service:5002
+    depends_on:
+      - redis
+    networks:
+      - haveit-network
+
+  # Web App: Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: haveit-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env.example
+    depends_on:
+      - user-service
+      - chat-service
+      - post-service
+    networks:
+      - haveit-network
+
+  # Web App: Admin Command Center
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: haveit-admin
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./admin/.env.example
+    depends_on:
+      - user-service
+      - chat-service
+      - post-service
+    networks:
+      - haveit-network
