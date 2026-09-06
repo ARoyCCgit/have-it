@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Clean install all dependencies (including devDependencies like typescript)
-RUN npm ci
+RUN npm install
 
 # Copy source code and compile TypeScript to JavaScript (/app/dist)
 COPY . .
@@ -27,7 +27,7 @@ ENV PORT=5002
 
 # Only install runtime dependencies
 COPY package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm install --omit=dev && npm cache clean --force
 
 # Copy compiled files from builder
 COPY --from=builder /app/dist ./dist
