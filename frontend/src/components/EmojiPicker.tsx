@@ -264,7 +264,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
   }, [search, activeCategory, allItems]);
 
   return (
-    <div className="w-80 sm:w-88 bg-[#202c33] border border-gray-700/90 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50 select-none animate-in fade-in zoom-in-95 duration-150">
+    <div className="w-[calc(100vw-24px)] max-w-[340px] sm:max-w-[360px] bg-[#202c33] border border-gray-700/90 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50 select-none animate-in fade-in zoom-in-95 duration-150">
       {/* Search Header */}
       <div className="p-2.5 border-b border-gray-700/60 bg-[#111b21]">
         <div className="relative flex items-center">

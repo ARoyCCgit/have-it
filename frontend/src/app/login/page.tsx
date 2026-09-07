@@ -60,17 +60,17 @@ const LoginForm = () => {
     if (isAuth) redirect("/chat");
 
     return (
-        <div className="min-h-screen bg-[#0b141a] flex items-center justify-center p-4 selection:bg-[#03cafc]/30 selection:text-white">
+        <div className="min-h-[100dvh] bg-[#0b141a] flex items-center justify-center p-3 sm:p-4 selection:bg-[#03cafc]/30 selection:text-white">
             <div className="max-w-md w-full">
-                <div className="bg-[#111b21] border border-[#03cafc]/25 rounded-2xl p-8 shadow-2xl shadow-[#03cafc]/10">
+                <div className="bg-[#111b21] border border-[#03cafc]/25 rounded-2xl p-5 sm:p-8 shadow-2xl shadow-[#03cafc]/10">
                     <div className="text-center mb-6">
-                        <div className="flex justify-center mb-5">
-                            <HaveItLogo size={80} glow={true} />
+                        <div className="flex justify-center mb-4 sm:mb-5">
+                            <HaveItLogo size={68} glow={true} />
                         </div>
-                        <h1 className="text-3xl font-extrabold text-white mb-2 tracking-tight">
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
                             Welcome to <span className="text-[#03cafc]">Have-it</span>
                         </h1>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-400 text-xs sm:text-sm">
                             Sign in with your preferred account or email.
                         </p>
                     </div>
@@ -143,7 +143,7 @@ const LoginForm = () => {
                             <input
                                 type="email"
                                 id="email"
-                                className="w-full px-4 py-3.5 bg-[#202c33] border border-gray-700 focus:border-[#03cafc] rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors"
+                                className="w-full px-4 py-3.5 bg-[#202c33] border border-gray-700 focus:border-[#03cafc] rounded-xl text-white text-base sm:text-sm placeholder-gray-500 focus:outline-none transition-colors"
                                 placeholder="Enter your email address"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}

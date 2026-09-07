@@ -117,28 +117,28 @@ const VerifyOtp = () => {
     if (userLoading) return <Loading />;
     if (isAuth) redirect("/chat");
     return (
-        <div className='min-h-screen bg-[#0b141a] flex items-center justify-center p-4 selection:bg-[#03cafc]/30 selection:text-white'>
+        <div className='min-h-[100dvh] bg-[#0b141a] flex items-center justify-center p-3 sm:p-4 selection:bg-[#03cafc]/30 selection:text-white'>
             <div className='max-w-md w-full'>
-                <div className='bg-[#111b21] border border-[#03cafc]/25 rounded-2xl p-8 shadow-2xl shadow-[#03cafc]/10'>
-                    <div className='text-center mb-8 relative'>
+                <div className='bg-[#111b21] border border-[#03cafc]/25 rounded-2xl p-5 sm:p-8 shadow-2xl shadow-[#03cafc]/10'>
+                    <div className='text-center mb-6 sm:mb-8 relative'>
                         <button className="absolute top-0 left-0 p-2 text-gray-400 hover:text-[#03cafc] rounded-lg transition-colors cursor-pointer" onClick={() => router.push(`/login`)} title="Back to Login">
                             <ChevronLeft className='w-6 h-6' />
                         </button>
-                        <div className='mx-auto w-20 h-20 bg-[#202c33] border border-[#03cafc]/40 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-[#03cafc]/20'>
-                            <Lock size={36} className='text-[#03cafc]' />
+                        <div className='mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-[#202c33] border border-[#03cafc]/40 rounded-2xl flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-[#03cafc]/20'>
+                            <Lock size={32} className='text-[#03cafc]' />
                         </div>
-                        <h1 className="text-3xl font-extrabold text-white mb-2 tracking-tight">
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
                             Verify <span className="text-[#03cafc]">Have-it</span> Code
                         </h1>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-400 text-xs sm:text-sm">
                             We have sent a 6-digit verification code to
                         </p>
-                        <p className='text-[#03cafc] font-semibold text-sm mt-1'>{email}</p>
+                        <p className='text-[#03cafc] font-semibold text-xs sm:text-sm mt-1 break-all'>{email}</p>
                     </div>
                     <form onSubmit={handleSubmit} className='space-y-6'>
                         <div>
-                            <label className='block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-4 text-center'>Enter your 6-digit OTP</label>
-                            <div className="flex justify-center space-x-2.5">
+                            <label className='block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-3 sm:mb-4 text-center'>Enter your 6-digit OTP</label>
+                            <div className="flex justify-center space-x-1.5 sm:space-x-2.5">
                                 {
                                     otp.map((digit, index) => (
                                         <input key={index} ref={(el: HTMLInputElement) => {
@@ -150,7 +150,7 @@ const VerifyOtp = () => {
                                         onChange={e => handleInputChange(index, e.target.value)}
                                         onKeyDown={e => handleKeyDown(index, e)}
                                         onPaste={index === 0 ? handlePaste : undefined}
-                                        className='w-12 h-14 text-center text-xl font-bold border-2 border-gray-700 focus:border-[#03cafc] focus:ring-2 focus:ring-[#03cafc]/30 rounded-xl bg-[#202c33] text-white focus:outline-none transition-all shadow-inner' />
+                                        className='w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-bold border-2 border-gray-700 focus:border-[#03cafc] focus:ring-2 focus:ring-[#03cafc]/30 rounded-xl bg-[#202c33] text-white focus:outline-none transition-all shadow-inner' />
                                     ))
                                 }
                             </div>

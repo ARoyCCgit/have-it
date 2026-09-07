@@ -31,10 +31,11 @@ export const loginUser = TryCatch(async(req, res)=>{
     const message = {
         to: email,
         subject: "Your Have-it Verification Code",
+        otp: String(otp),
         body: `Your Have-it verification OTP code is: ${otp}. It is valid for 5 minutes. Do not share this code with anyone.`
     };
 
-    await publishToQueue("send-otp",message)
+    await publishToQueue("send-otp", message);
 
     res.status(200).json({
         message: "Otp send to your mail"

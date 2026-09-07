@@ -3,6 +3,7 @@
 import { User, useAppData } from '@/context/Appcontext';
 import { useSocket } from '@/context/SocketContext';
 import {
+  ChevronLeft,
   Menu,
   MoreVertical,
   Phone,
@@ -23,6 +24,7 @@ import { useCall } from '@/context/CallContext';
 interface ChatHeaderProps {
   user: User | null;
   setSidebarOpen: (open: boolean) => void;
+  onBack?: () => void;
   isTyping: boolean;
   onOpenContactInfo: () => void;
   onToggleSearch: () => void;
@@ -32,6 +34,7 @@ interface ChatHeaderProps {
 const ChatHeaders = ({
   user,
   setSidebarOpen,
+  onBack,
   isTyping,
   onOpenContactInfo,
   onToggleSearch,
@@ -70,16 +73,29 @@ const ChatHeaders = ({
   };
 
   return (
-    <div className="bg-[#202c33] border-b border-gray-800 px-3 sm:px-4 py-2 flex items-center justify-between z-20 select-none shadow-sm flex-shrink-0 relative">
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        {/* Mobile menu toggle */}
-        <button
-          className="sm:hidden p-1.5 hover:bg-gray-700/60 rounded-lg text-gray-300 transition-colors cursor-pointer"
-          onClick={() => setSidebarOpen(true)}
-          title="Open Chats"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
+    <div className="bg-[#202c33] border-b border-gray-800 px-2 sm:px-4 py-2.5 flex items-center justify-between z-20 select-none shadow-sm flex-shrink-0 relative">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+        {/* Mobile Back Button (returns to chat list) */}
+        {user && onBack && (
+          <button
+            className="md:hidden p-1.5 -ml-1 text-[#03cafc] hover:bg-gray-700/60 rounded-xl transition-colors cursor-pointer flex-shrink-0"
+            onClick={onBack}
+            title="Back to all chats"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+        )}
+
+        {/* Fallback menu toggle when no active user */}
+        {!user && (
+          <button
+            className="md:hidden p-1.5 hover:bg-gray-700/60 rounded-lg text-gray-300 transition-colors cursor-pointer"
+            onClick={() => setSidebarOpen(true)}
+            title="Open Chats"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
 
         {user ? (
           /* Clickable Contact / Group Profile header */

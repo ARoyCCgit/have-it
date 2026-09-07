@@ -360,28 +360,39 @@ const HaveItChat = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="h-screen w-screen flex bg-[#111b21] text-white overflow-hidden select-none">
-      {/* Have-it Sidebar */}
-      <ChatSidebar
-        sideBarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        showAllUsers={showAllUsers}
-        setShowAllUsers={setShowAllUsers}
-        users={users}
-        loggedInUser={loggedInUser}
-        chats={chats}
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
-        handleLogout={handleLogout}
-        createChat={createChat}
-        onOpenCreateGroup={() => setIsCreateGroupOpen(true)}
-      />
+    <div className="h-[100dvh] w-full flex bg-[#111b21] text-white overflow-hidden select-none">
+      {/* Have-it Sidebar — Full screen on mobile when no chat is selected, fixed column on desktop */}
+      <div
+        className={`h-full ${
+          selectedUser ? 'hidden md:flex' : 'flex w-full'
+        } md:w-80 lg:w-96 flex-shrink-0`}
+      >
+        <ChatSidebar
+          sideBarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          showAllUsers={showAllUsers}
+          setShowAllUsers={setShowAllUsers}
+          users={users}
+          loggedInUser={loggedInUser}
+          chats={chats}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          handleLogout={handleLogout}
+          createChat={createChat}
+          onOpenCreateGroup={() => setIsCreateGroupOpen(true)}
+        />
+      </div>
 
-      {/* Have-it Main Chat Panel */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden overflow-x-hidden bg-[#0b141a] relative border-l border-gray-800 w-full min-w-0 max-w-full">
+      {/* Have-it Main Chat Panel — Full screen on mobile when chat is selected, flex-1 on desktop */}
+      <div
+        className={`h-full ${
+          !selectedUser ? 'hidden md:flex' : 'flex w-full'
+        } flex-1 flex-col overflow-hidden bg-[#0b141a] relative md:border-l md:border-gray-800 min-w-0`}
+      >
         <ChatHeaders
           user={activeUser}
           setSidebarOpen={setSidebarOpen}
+          onBack={() => setSelectedUser(null)}
           isTyping={isTyping}
           onOpenContactInfo={() => setIsContactInfoOpen((prev) => !prev)}
           onToggleSearch={() => setIsSearchOpen((prev) => !prev)}

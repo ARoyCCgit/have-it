@@ -152,29 +152,21 @@ const ChatSidebar = ({
   ).length;
 
   return (
-    <aside
-      className={`
-        fixed inset-y-0 left-0 z-40
-        w-80 sm:w-96 max-w-[90vw]
-        bg-[#111b21] border-r border-gray-800
-        transform transition-transform duration-300
-        ${sideBarOpen ? 'translate-x-0' : '-translate-x-full'}
-        sm:static sm:translate-x-0
-        h-dvh
-        flex flex-col select-none
-      `}
-    >
+    <aside className="w-full h-full bg-[#111b21] md:border-r md:border-gray-800 flex flex-col select-none overflow-hidden">
       {/* Sidebar Header */}
       <div className="p-3 bg-[#202c33] border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="sm:hidden flex items-center">
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="p-1.5 hover:bg-gray-700/60 rounded-lg transition-colors cursor-pointer mr-1"
-            >
-              <X className="w-5 h-5 text-gray-300" />
-            </button>
-          </div>
+          {sideBarOpen && (
+            <div className="md:hidden flex items-center">
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-1.5 hover:bg-gray-700/60 rounded-lg transition-colors cursor-pointer mr-1"
+                title="Close"
+              >
+                <X className="w-5 h-5 text-gray-300" />
+              </button>
+            </div>
+          )}
 
           <Link
             href="/chat"
@@ -182,7 +174,7 @@ const ChatSidebar = ({
             title="Have-it"
           >
             <HaveItLogo size={32} glow={false} />
-            <span className="text-base font-bold text-white tracking-tight hidden xs:inline">
+            <span className="text-base font-bold text-white tracking-tight">
               Have<span className="text-[#03cafc]">-it</span>
             </span>
           </Link>

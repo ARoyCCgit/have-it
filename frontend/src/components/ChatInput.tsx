@@ -426,7 +426,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
       {/* Emoji Picker Popover */}
       {showEmojiPicker && (
-        <div ref={emojiPickerRef} className="absolute bottom-16 left-3 z-50">
+        <div ref={emojiPickerRef} className="absolute bottom-16 left-2 sm:left-3 z-50 max-w-[calc(100vw-16px)]">
           <EmojiPicker
             onSelectEmoji={handleSelectEmoji}
             onClose={() => setShowEmojiPicker(false)}
@@ -593,7 +593,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                   : 'Type a message...'
               }
               disabled={sending}
-              className="w-full px-4 py-2.5 bg-transparent text-white placeholder-gray-400 text-sm focus:outline-none resize-none max-h-28 overflow-y-auto custom-scroll"
+              className="w-full px-4 py-2.5 bg-transparent text-white placeholder-gray-400 text-base sm:text-sm focus:outline-none resize-none max-h-28 overflow-y-auto custom-scroll"
             />
           </div>
 

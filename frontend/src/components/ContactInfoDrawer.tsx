@@ -116,8 +116,9 @@ export const ContactInfoDrawer: React.FC<ContactInfoDrawerProps> = ({
       {/* Slide-over Drawer Panel */}
       <div
         className={`
-          w-80 sm:w-96 bg-[#111b21] border-l border-gray-800
-          h-full flex flex-col z-30 select-none shadow-2xl flex-shrink-0
+          fixed inset-0 z-50 w-full sm:static sm:z-30 sm:w-80 md:w-96
+          bg-[#111b21] sm:border-l sm:border-gray-800
+          h-full flex flex-col select-none shadow-2xl flex-shrink-0
           animate-in slide-in-from-right duration-200
         `}
       >

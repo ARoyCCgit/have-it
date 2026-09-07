@@ -1,6 +1,7 @@
 import ampq from 'amqplib';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import { getOtpEmailHtml } from './emailTemplate.js';
 dotenv.config();
 
 export const startSendOtpConsumer = async()=>{
@@ -25,7 +26,12 @@ export const startSendOtpConsumer = async()=>{
         channel.consume(queueName, async(msg)=>{
             if(msg){
                 try {
-                    const {to, subject, body} = JSON.parse(msg.content.toString());
+                    const parsed = JSON.parse(msg.content.toString());
+                    const { to, subject, body, otp, html } = parsed;
+
+                    // Extract 6-digit OTP code to inject into professional template
+                    const extractedOtp = otp || (body ? body.match(/\b\d{6}\b/)?.[0] : null) || "------";
+                    const emailHtml = html || getOtpEmailHtml(extractedOtp, to);
 
                     if (process.env.BREVO_API_KEY) {
                         // Brevo HTTPS API (Port 443 — sends to ANY email in the world without a custom domain)
@@ -42,7 +48,8 @@ export const startSendOtpConsumer = async()=>{
                                     email: process.env.BREVO_SENDER_EMAIL || process.env.Nodemailer_User || "arnabroy466@gmail.com",
                                 },
                                 to: [{ email: to }],
-                                subject: subject,
+                                subject: subject || "Your Have-it Verification Code",
+                                htmlContent: emailHtml,
                                 textContent: body,
                             }),
                         });
@@ -66,8 +73,9 @@ export const startSendOtpConsumer = async()=>{
                         await transporter.sendMail({
                             from: `"Have-it" <${process.env.Nodemailer_User}>`,
                             to,
-                            subject: subject,
+                            subject: subject || "Your Have-it Verification Code",
                             text: body,
+                            html: emailHtml,
                         });
 
                         console.log(`✅ Otp sent via SMTP to ${to}`);
