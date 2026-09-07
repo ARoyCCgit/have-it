@@ -26,6 +26,7 @@ docs/
 │   └── POSTS_DEVELOPMENT_LOG.md                       # Chronological development milestones & checklist
 │
 ├── architecture/                                      # 🏛️ System Design, Roadmaps & Strategy
+│   ├── INFRASTRUCTURE_AND_SERVICES_DIRECTORY.md       # Master Directory of Cloud Services & Credentials
 │   ├── HAVEIT_MONETIZATION_AND_BUSINESS_STRATEGY.md   # 6 revenue streams, free-user CPM, and zero-cost cloud
 │   ├── PRODUCT_REBRAND_AND_STRATEGY.md                # Have-it brand philosophy & visual design
 │   └── PROJECT_ROADMAP.md                             # Global project roadmap
@@ -49,14 +50,16 @@ docs/
 
 ## 🚀 Direct Links to Core Documentation
 
-1. **[Production Server Hosting & App Store Guide](./deployment/PRODUCTION_HOSTING_AND_APP_STORE_GUIDE.md)**: VPS hosting, Docker Compose, Nginx SSL/WebSockets, Capacitor mobile build, Google Play Console, and Apple App Store submission.
-2. **[Admin Command Center & Cloud API Spec](./admin/ADMIN_PANEL_ARCHITECTURE_AND_SPECIFICATION.md)**: Physical isolation architecture, RBAC, Webhooks, and API key management.
-3. **[Posts Feature & Requirements](./posts/POSTS_FEATURE_REQUIREMENTS_AND_ROADMAP.md)**: Schemas, APIs, UI layout, and 8-phase execution plan.
-4. **[Billion-Scale Feed Algorithm & System Design](./posts/POSTS_SYSTEM_DESIGN_AND_FEED_ALGORITHM.md)**: Recency decay, user-author affinity scoring, hybrid push/pull fan-out, and write-back caching.
-5. **[Posts Development Tracking Log](./posts/POSTS_DEVELOPMENT_LOG.md)**: Real-time progress checklist and chronological milestone logs.
-6. **[Monetization & Business Strategy](./architecture/HAVEIT_MONETIZATION_AND_BUSINESS_STRATEGY.md)**: How Have-it earns from Premium, Creator Stars, Programmatic CPM Ads, B2B messaging, and Social Commerce.
-7. **[Chat & Calls Phase Summaries](./chats/PHASE_1_SUMMARY.md)**: Historical development phases for the Messenger feature.
-8. **[Error Diagnostics & Repair Log](./logs/ERROR_TRACKING_AND_REPAIR_LOG.md)**: Automated health check logs and diagnostic audit records.
+1. **[Cloud Infrastructure & Services Directory](./architecture/INFRASTRUCTURE_AND_SERVICES_DIRECTORY.md)**: Complete registry of all external cloud services, credentials, and architecture roles.
+2. **[Production Server Hosting & App Store Guide](./deployment/PRODUCTION_HOSTING_AND_APP_STORE_GUIDE.md)**: VPS hosting, Docker Compose, Nginx SSL/WebSockets, Capacitor mobile build, Google Play Console, and Apple App Store submission.
+3. **[Free Tier Production Hosting Guide](./deployment/FREE_TIER_HOSTING_GUIDE.md)**: Step-by-step 100% free hosting manual (Vercel, Render, CloudAMQP, Upstash, keep-alive setup).
+4. **[Admin Command Center & Cloud API Spec](./admin/ADMIN_PANEL_ARCHITECTURE_AND_SPECIFICATION.md)**: Physical isolation architecture, RBAC, Webhooks, and API key management.
+5. **[Posts Feature & Requirements](./posts/POSTS_FEATURE_REQUIREMENTS_AND_ROADMAP.md)**: Schemas, APIs, UI layout, and 8-phase execution plan.
+6. **[Billion-Scale Feed Algorithm & System Design](./posts/POSTS_SYSTEM_DESIGN_AND_FEED_ALGORITHM.md)**: Recency decay, user-author affinity scoring, hybrid push/pull fan-out, and write-back caching.
+7. **[Posts Development Tracking Log](./posts/POSTS_DEVELOPMENT_LOG.md)**: Real-time progress checklist and chronological milestone logs.
+8. **[Monetization & Business Strategy](./architecture/HAVEIT_MONETIZATION_AND_BUSINESS_STRATEGY.md)**: How Have-it earns from Premium, Creator Stars, Programmatic CPM Ads, B2B messaging, and Social Commerce.
+9. **[Chat & Calls Phase Summaries](./chats/PHASE_1_SUMMARY.md)**: Historical development phases for the Messenger feature.
+10. **[Error Diagnostics & Repair Log](./logs/ERROR_TRACKING_AND_REPAIR_LOG.md)**: Automated health check logs and diagnostic audit records.
 
 ---
 
