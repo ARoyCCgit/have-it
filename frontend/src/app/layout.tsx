@@ -8,6 +8,7 @@ import { CallProvider } from "@/context/CallContext";
 import IncomingCallModal from "@/components/IncomingCallModal";
 import CallModal from "@/components/CallModal";
 import MaintenanceGate from "@/components/MaintenanceGate";
+import PWARegister from "@/components/PWARegister";
 
 export const viewport: Viewport = {
   themeColor: "#03cafc",
@@ -21,10 +22,15 @@ export const metadata: Metadata = {
   title: "Have-it Web",
   description: "Have-it — Real-Time Messenger for Web, Desktop & Mobile (iOS, Android, Windows, macOS)",
   applicationName: "Have-it",
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
     shortcut: "/icon.svg",
-    apple: "/icon.svg",
+    apple: "/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
@@ -53,6 +59,7 @@ export default function RootLayout({
                     {children}
                     <IncomingCallModal />
                     <CallModal />
+                    <PWARegister />
                   </MaintenanceGate>
                 </CallProvider>
               </PostSocketProvider>

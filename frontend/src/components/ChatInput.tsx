@@ -73,6 +73,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const emojiButtonRef = useRef<HTMLButtonElement>(null);
   const { emitTyping, emitStopTyping } = useSocket();
 
   // Populate text when editing
@@ -85,18 +86,24 @@ const ChatInput: React.FC<ChatInputProps> = ({
     }
   }, [editingMessage]);
 
-  // Click outside to close emoji picker
+  // Click / touch outside to close emoji picker
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: Event) => {
+      const target = e.target as Node;
       if (
         emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(e.target as Node)
+        !emojiPickerRef.current.contains(target) &&
+        !emojiButtonRef.current?.contains(target)
       ) {
         setShowEmojiPicker(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   const handleImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
@@ -424,14 +431,24 @@ const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       )}
 
-      {/* Emoji Picker Popover */}
+      {/* Emoji Picker Popover / Mobile Bottom-Sheet */}
       {showEmojiPicker && (
-        <div ref={emojiPickerRef} className="absolute bottom-16 left-2 sm:left-3 z-50 max-w-[calc(100vw-16px)]">
-          <EmojiPicker
-            onSelectEmoji={handleSelectEmoji}
-            onClose={() => setShowEmojiPicker(false)}
+        <>
+          {/* Mobile Backdrop to tap outside */}
+          <div
+            className="fixed inset-0 bg-black/40 z-40 sm:hidden animate-in fade-in duration-150"
+            onClick={() => setShowEmojiPicker(false)}
           />
-        </div>
+          <div
+            ref={emojiPickerRef}
+            className="fixed inset-x-0 bottom-0 z-50 sm:absolute sm:bottom-16 sm:left-3 sm:inset-x-auto max-h-[65vh] sm:max-h-none overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-bottom-2 duration-200"
+          >
+            <EmojiPicker
+              onSelectEmoji={handleSelectEmoji}
+              onClose={() => setShowEmojiPicker(false)}
+            />
+          </div>
+        </>
       )}
 
       {/* Replying Banner Preview */}
@@ -554,6 +571,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
           {/* Emoji Picker Button */}
           <button
+            ref={emojiButtonRef}
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
             className={`p-2.5 rounded-full transition-colors flex-shrink-0 cursor-pointer ${

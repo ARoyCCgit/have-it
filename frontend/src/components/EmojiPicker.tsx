@@ -242,7 +242,7 @@ const EMOJI_CATALOG: EmojiCategory[] = [
   },
 ];
 
-const EmojiPicker: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
+const EmojiPicker: React.FC<EmojiPickerProps> = ({ onSelectEmoji, onClose }) => {
   const [activeCategory, setActiveCategory] = useState(0);
   const [search, setSearch] = useState('');
 
@@ -264,29 +264,38 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
   }, [search, activeCategory, allItems]);
 
   return (
-    <div className="w-[calc(100vw-24px)] max-w-[340px] sm:max-w-[360px] bg-[#202c33] border border-gray-700/90 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50 select-none animate-in fade-in zoom-in-95 duration-150">
+    <div className="w-full sm:w-[360px] bg-[#202c33] border border-gray-700/90 rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50 select-none animate-in fade-in zoom-in-95 duration-150">
       {/* Search Header */}
-      <div className="p-2.5 border-b border-gray-700/60 bg-[#111b21]">
-        <div className="relative flex items-center">
+      <div className="p-2.5 border-b border-gray-700/60 bg-[#111b21] flex items-center gap-2">
+        <div className="relative flex items-center flex-1">
           <Search className="absolute left-2.5 w-4 h-4 text-gray-400 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search emoji (e.g. smile, heart, fire, clap)..."
+            placeholder="Search emoji (e.g. smile, heart, fire)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            autoFocus
-            className="w-full pl-8.5 pr-8 py-1.5 bg-[#202c33] text-white text-xs rounded-xl border border-gray-700 focus:outline-none focus:border-[#03cafc] placeholder-gray-400 transition-colors"
+            className="w-full pl-8.5 pr-8 py-2 sm:py-1.5 bg-[#202c33] text-white text-sm sm:text-xs rounded-xl border border-gray-700 focus:outline-none focus:border-[#03cafc] placeholder-gray-400 transition-colors"
           />
           {search && (
             <button
               type="button"
               onClick={() => setSearch('')}
-              className="absolute right-2.5 text-gray-400 hover:text-white p-0.5 rounded-full hover:bg-gray-700/60 transition-colors cursor-pointer"
+              className="absolute right-2.5 text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700/60 transition-colors cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-700/60 rounded-xl transition-colors cursor-pointer flex-shrink-0"
+            title="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Category Tabs (visible when not searching) */}
