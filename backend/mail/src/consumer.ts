@@ -51,8 +51,18 @@ export const startSendOtpConsumer = async()=>{
             }
         })
         
-    } catch (error) {
-        console.log('Failed to start RabbitMq consumer',error);
+        connection.on("error", (err) => {
+            console.error("RabbitMQ connection error in mail service:", err);
+            setTimeout(startSendOtpConsumer, 5000);
+        });
+
+        connection.on("close", () => {
+            console.warn("RabbitMQ connection closed in mail service. Reconnecting in 5s...");
+            setTimeout(startSendOtpConsumer, 5000);
+        });
         
+    } catch (error) {
+        console.error('Failed to start RabbitMq consumer, retrying in 5 seconds...', error);
+        setTimeout(startSendOtpConsumer, 5000);
     }
 }
