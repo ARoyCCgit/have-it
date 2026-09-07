@@ -15,8 +15,9 @@ export const getOtpEmailHtml = (
   const rawOtp = String(otp).trim();
   const formattedOtp = rawOtp.split("").join(" ");
   const baseAppUrl = (frontendUrl || process.env.FRONTEND_URL || "https://have-it-super-app.vercel.app").replace(/\/$/, "");
-  const verifyUrl = `${baseAppUrl}/verify?email=${encodeURIComponent(recipientEmail)}&otp=${encodeURIComponent(rawOtp)}`;
+  const copyUrl = `${baseAppUrl}/verify?email=${encodeURIComponent(recipientEmail)}&otp=${encodeURIComponent(rawOtp)}&copied=1`;
   const logoUrl = "https://res.cloudinary.com/deolniqzk/image/upload/v1788779349/haveit_app_logo.png";
+  const copyIconUrl = "https://res.cloudinary.com/deolniqzk/image/upload/v1788780730/haveit/haveit_copy_icon.png";
 
   return `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -62,35 +63,29 @@ export const getOtpEmailHtml = (
                 Use this single-use code to sign in to your account.
               </p>
 
-              <!-- Single-Line Compact OTP Box -->
-              <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 0 auto; background-color: #f0f9ff; border: 1.5px dashed #0284c7; border-radius: 12px;">
+              <!-- Compact 16px OTP Box with Copy Icon (Not bulky) -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 0 auto; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
                 <tr>
-                  <td style="padding: 10px 24px; text-align: center; vertical-align: middle;">
-                    <span style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 30px; font-weight: 800; letter-spacing: 7px; color: #0369a1; user-select: all; -webkit-user-select: all; display: inline-block;">
+                  <td style="padding: 8px 14px; vertical-align: middle;">
+                    <span style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 16px; font-weight: 700; letter-spacing: 4px; color: #0f172a; user-select: all; -webkit-user-select: all; display: inline-block;">
                       ${formattedOtp}
                     </span>
                   </td>
-                </tr>
-              </table>
-
-              <!-- Copy Option Notice -->
-              <div style="margin-top: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b;">
-                📋 <strong>Tap code above to select &amp; copy</strong>
-              </div>
-
-              <!-- One-Click Instant Verification Button -->
-              <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 18px auto 0 auto;">
-                <tr>
-                  <td align="center">
-                    <a href="${verifyUrl}" target="_blank" style="display: inline-block; background-color: #03cafc; color: #0b141a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; text-decoration: none; padding: 10px 24px; border-radius: 10px; box-shadow: 0 2px 8px rgba(3, 202, 252, 0.35);">
-                      Verify Automatically &rarr;
+                  <td style="padding: 6px 10px 6px 0; vertical-align: middle;">
+                    <a href="${copyUrl}" target="_blank" title="Copy code" style="display: inline-block; text-decoration: none; padding: 4px 6px; background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; vertical-align: middle;">
+                      <img src="${copyIconUrl}" width="16" height="16" alt="Copy" style="display: block; width: 16px; height: 16px; border: 0;" />
                     </a>
                   </td>
                 </tr>
               </table>
 
+              <!-- Copy Instruction -->
+              <div style="margin-top: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b;">
+                Click the copy icon or tap the code to copy
+              </div>
+
               <!-- Expiry & Security Notice -->
-              <div style="margin-top: 24px; padding: 12px 14px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; text-align: left;">
+              <div style="margin-top: 22px; padding: 12px 14px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; text-align: left;">
                 <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; line-height: 1.5; color: #64748b;">
                   ⏱️ <strong>Valid for 5 minutes.</strong> Never share this code with anyone. If you didn't request this login, you can safely ignore this email.
                 </p>

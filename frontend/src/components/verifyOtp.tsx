@@ -20,14 +20,24 @@ const VerifyOtp = () => {
     const searchParams = useSearchParams();
     const email: string = searchParams.get('email') || "";
     const otpParam: string = searchParams.get('otp') || "";
+    const isCopiedAction: boolean = searchParams.get('copied') === '1';
 
     const router = useRouter();
 
     useEffect(() => {
         if (otpParam && otpParam.length === 6) {
             setOtp(otpParam.split(''));
+            if (isCopiedAction) {
+                if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                    navigator.clipboard.writeText(otpParam).then(() => {
+                        toast.success(`Verification code copied: ${otpParam}`);
+                    }).catch(() => {
+                        // clipboard write fallback
+                    });
+                }
+            }
         }
-    }, [otpParam]);
+    }, [otpParam, isCopiedAction]);
 
     useEffect(() => {
         if (timer > 0) {

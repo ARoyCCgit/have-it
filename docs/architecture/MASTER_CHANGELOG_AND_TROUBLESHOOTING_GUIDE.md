@@ -76,18 +76,19 @@
   - Updated `manifest.ts` and `layout.tsx` with Web App Manifest, Apple Web App settings, and touch icons.
   - Built `frontend/src/components/PWARegister.tsx` providing an automated install prompt banner for Android/Chrome and home screen instructions for iOS Safari.
 
-### 1.7 High-Contrast Compact Email Template & Quick-Verify Auto-Fill
+### 1.7 High-Contrast Compact 16px Email Template & Copy Icon
 * **The Problem**:
-  - Logo was a fallback "H" badge rather than the actual Have-it logo.
-  - "Have" text blended into light/dark background colors across different email clients (e.g. Gmail / Outlook dark mode).
-  - OTP display box was overly large and clunky across viewports.
-  - No quick one-tap copy option or auto-fill button.
+  - Logo was previously a fallback "H" badge rather than the actual Have-it logo.
+  - "Have" text blended into background colors in dark mode email clients.
+  - OTP display box was overly bulky and oversized (30px font).
+  - Needed a clean, non-bulky 16px OTP box with no redundant verification button and a dedicated copy icon that copies the code.
 * **The Solution**:
   - Hosted actual Have-it logo permanently on user's Cloudinary CDN (`https://res.cloudinary.com/deolniqzk/image/upload/v1788779349/haveit_app_logo.png`).
-  - Implemented 100% inline-styled, bulletproof HTML email card (`#ffffff`) with `#0f172a !important;` ("Have") and `#0284c7 !important;` ("-it"), guaranteeing 100% contrast in both light & dark mode email clients.
-  - Redesigned OTP into a sleek, compact single-line badge with monospace font and generous letter-spacing.
-  - Added native tap-to-select (`user-select: all;`) and a dedicated copy instruction.
-  - Added a one-click "Verify Automatically &rarr;" button (`${frontendUrl}/verify?email=...&otp=...`) and updated `verifyOtp.tsx` to pre-fill the OTP code automatically when clicked from the email.
+  - Implemented 100% inline-styled, bulletproof HTML email card (`#ffffff`) with `#0f172a !important;` ("Have") and `#0284c7 !important;` ("-it"), guaranteeing 100% contrast in both light & dark modes.
+  - Redesigned OTP into a sleek, non-bulky badge with exact `16px` font size and monospace layout.
+  - Removed the quick verification button.
+  - Added a dedicated copy icon (`haveit_copy_icon.png`) directly alongside the 6 digits, linking to the app with `copied=1` which automatically executes `navigator.clipboard.writeText(...)` and triggers a success toast while pre-filling the inputs.
+  - Maintained `user-select: all;` so tapping the code in any mail app selects all 6 digits instantly.
 
 ---
 
