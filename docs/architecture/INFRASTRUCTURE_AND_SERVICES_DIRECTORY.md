@@ -98,18 +98,16 @@ The **Have-it** platform combines an end-to-end real-time messenger with a moder
 
 ---
 
-### 3.5 Transactional Mail Dispatch (Gmail SMTP, Brevo HTTPS, Resend HTTPS)
+### 3.5 Transactional Mail Dispatch (Brevo HTTPS API & Gmail SMTP)
 * **What It Is**: Multi-channel email delivery engine supporting:
-  1. **Brevo (formerly Sendinblue) HTTPS API (Port 443)**: *Recommended for Render Cloud*. Sends up to 300 emails/day to **ANY recipient address** without requiring a custom domain!
-  2. **Resend HTTPS API (Port 443)**: Sends 100 free emails/day. In sandbox mode, sends to your account email (`arnabroy466@gmail.com`). With a verified domain, sends to all recipients.
-  3. **Google Gmail SMTP (`smtp.gmail.com:465`)**: Used for local Docker / development environments via Nodemailer.
+  1. **Brevo (formerly Sendinblue) HTTPS API (Port 443)**: *Active for Render Cloud*. Sends up to 300 emails/day to **ANY recipient address** without requiring a custom domain!
+  2. **Google Gmail SMTP (`smtp.gmail.com:465`)**: Used for local development environments via Nodemailer.
 * **Why the HTTPS API Is Essential on Cloud Providers (Render)**:
   - Render free tier firewalls actively block all outbound raw TCP connections on SMTP ports 25, 465, and 587. Attempting to use SMTP results in an immediate `ETIMEDOUT: Connection timeout`.
-  - HTTPS APIs (Brevo & Resend) transmit email requests securely over Port 443, which is universally permitted across all cloud hosts.
+  - Brevo HTTPS API transmits email requests securely over Port 443, which is universally permitted across all cloud hosts.
 * **Configuration Switch**:
   - If `BREVO_API_KEY` is present in `mail-service` environment, it routes via Brevo HTTPS API.
-  - Else if `RESEND_API_KEY` is present, it routes via Resend HTTPS API.
-  - Otherwise, it falls back to Nodemailer SMTP.
+  - Otherwise, it falls back to Nodemailer SMTP for local development.
 
 ---
 

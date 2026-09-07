@@ -51,26 +51,6 @@ export const startSendOtpConsumer = async()=>{
                             throw new Error(`Brevo API error: ${JSON.stringify(brevoData)}`);
                         }
                         console.log(`✅ Otp sent via Brevo HTTPS API to ${to}`);
-                    } else if (process.env.RESEND_API_KEY) {
-                        // Resend HTTPS API (Port 443 — sends to your account email in sandbox mode or all if domain added)
-                        const resendRes = await fetch("https://api.resend.com/emails", {
-                            method: "POST",
-                            headers: {
-                                "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                from: process.env.EMAIL_FROM || "Have-it <onboarding@resend.dev>",
-                                to: [to],
-                                subject: subject,
-                                text: body,
-                            }),
-                        });
-                        const resData = await resendRes.json();
-                        if (!resendRes.ok) {
-                            throw new Error(`Resend API error: ${JSON.stringify(resData)}`);
-                        }
-                        console.log(`✅ Otp sent via Resend HTTPS API to ${to}`);
                     } else {
                         // Standard SMTP fallback (for local development)
                         const transporter = nodemailer.createTransport({
