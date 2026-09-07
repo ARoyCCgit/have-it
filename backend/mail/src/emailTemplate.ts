@@ -1,210 +1,116 @@
 /**
  * Professional HTML Email Template Generator for Have-it
  * Engineered for 100% email client compatibility (Gmail, Apple Mail, Outlook, Yahoo)
+ * Features:
+ * - Real Have-it Logo from Cloudinary CDN
+ * - High-contrast "Have-it" typography that never blends into dark/light mode backgrounds
+ * - Single-line compact OTP code box with one-tap select-all for copying
+ * - One-click auto-verify button that pre-fills the OTP in Have-it
  */
-export const getOtpEmailHtml = (otp: string | number, recipientEmail: string): string => {
-  const formattedOtp = String(otp).split("").join(" ");
+export const getOtpEmailHtml = (
+  otp: string | number,
+  recipientEmail: string,
+  frontendUrl?: string
+): string => {
+  const rawOtp = String(otp).trim();
+  const formattedOtp = rawOtp.split("").join(" ");
+  const baseAppUrl = (frontendUrl || process.env.FRONTEND_URL || "https://have-it-super-app.vercel.app").replace(/\/$/, "");
+  const verifyUrl = `${baseAppUrl}/verify?email=${encodeURIComponent(recipientEmail)}&otp=${encodeURIComponent(rawOtp)}`;
+  const logoUrl = "https://res.cloudinary.com/deolniqzk/image/upload/v1788779349/haveit_app_logo.png";
 
   return `
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
   <title>Your Have-it Verification Code</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #0b141a;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: #e9edef;
-      -webkit-font-smoothing: antialiased;
-    }
-    .wrapper {
-      width: 100%;
-      table-layout: fixed;
-      background-color: #0b141a;
-      padding: 40px 10px;
-    }
-    .container {
-      max-width: 520px;
-      margin: 0 auto;
-      background-color: #111b21;
-      border: 1px solid #1f2c34;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-    .header {
-      background: linear-gradient(135deg, #182730 0%, #111b21 100%);
-      padding: 35px 25px 25px 25px;
-      text-align: center;
-      border-bottom: 1px solid #202c33;
-    }
-    .logo-badge {
-      display: inline-block;
-      width: 56px;
-      height: 56px;
-      line-height: 56px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #03cafc 0%, #0077b6 100%);
-      color: #0b141a;
-      font-size: 28px;
-      font-weight: 900;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 18px rgba(3, 202, 252, 0.4);
-      text-align: center;
-    }
-    .brand-title {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #ffffff;
-      margin: 0;
-    }
-    .brand-accent {
-      color: #03cafc;
-    }
-    .brand-subtitle {
-      font-size: 12px;
-      color: #8696a0;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 5px;
-      font-weight: 600;
-    }
-    .content {
-      padding: 35px 30px;
-      text-align: center;
-    }
-    .headline {
-      font-size: 20px;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 0 0 12px 0;
-    }
-    .subtext {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #aebac1;
-      margin: 0 0 28px 0;
-    }
-    .otp-box {
-      background: linear-gradient(180deg, #182730 0%, #111b21 100%);
-      border: 2px dashed #03cafc;
-      border-radius: 16px;
-      padding: 22px 15px;
-      margin: 0 auto 25px auto;
-      max-width: 320px;
-    }
-    .otp-code {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 38px;
-      font-weight: 800;
-      letter-spacing: 10px;
-      color: #03cafc;
-      margin: 0;
-      text-align: center;
-      padding-left: 10px;
-    }
-    .otp-caption {
-      font-size: 11px;
-      color: #8696a0;
-      margin-top: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .timer-pill {
-      display: inline-block;
-      background-color: #202c33;
-      border: 1px solid #2a3942;
-      color: #ffb703;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 20px;
-      margin-bottom: 25px;
-    }
-    .notice-card {
-      background-color: #182229;
-      border-radius: 12px;
-      padding: 16px;
-      border-left: 4px solid #03cafc;
-      text-align: left;
-      margin-top: 20px;
-    }
-    .notice-text {
-      font-size: 12px;
-      line-height: 1.6;
-      color: #8696a0;
-      margin: 0;
-    }
-    .notice-strong {
-      color: #e9edef;
-      font-weight: 600;
-    }
-    .footer {
-      background-color: #0b141a;
-      padding: 25px 20px;
-      text-align: center;
-      border-top: 1px solid #1f2c34;
-      font-size: 11px;
-      color: #667781;
-      line-height: 1.6;
-    }
-    .footer a {
-      color: #03cafc;
-      text-decoration: none;
-    }
-  </style>
 </head>
-<body>
-  <table role="presentation" class="wrapper" cellpadding="0" cellspacing="0" width="100%">
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+  <!-- Outer Wrapper Table -->
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f1f5f9; padding: 30px 10px;">
     <tr>
       <td align="center">
-        <div class="container">
-          <!-- Brand Header -->
-          <div class="header">
-            <div class="logo-badge">H</div>
-            <h1 class="brand-title">Have<span class="brand-accent">-it</span></h1>
-            <div class="brand-subtitle">Messenger & Social Network</div>
-          </div>
+        <!-- Main Card -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 480px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);">
+          
+          <!-- Card Header with Real Have-it Logo -->
+          <tr>
+            <td align="center" style="padding: 30px 20px 20px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9;">
+              <!-- Real Have-it Logo -->
+              <img src="${logoUrl}" width="54" height="54" alt="Have-it" style="display: block; margin: 0 auto 10px auto; border-radius: 14px; border: 1.5px solid #03cafc;" />
+              
+              <!-- Brand Title (High contrast, never disappears) -->
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 800; line-height: 28px; text-align: center; margin: 0;">
+                <span style="color: #0f172a !important; font-weight: 800;">Have</span><span style="color: #0284c7 !important; font-weight: 800;">-it</span>
+              </div>
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 4px; text-align: center;">
+                Messenger &amp; Social Network
+              </div>
+            </td>
+          </tr>
 
-          <!-- Main Body Content -->
-          <div class="content">
-            <h2 class="headline">Verification Code</h2>
-            <p class="subtext">
-              Use the single-use 6-digit verification code below to log in or confirm your identity on Have-it.
-            </p>
-
-            <!-- OTP Highlight Box -->
-            <div class="otp-box">
-              <div class="otp-code">${formattedOtp}</div>
-              <div class="otp-caption">One-Time Password</div>
-            </div>
-
-            <!-- Expiry Reminder -->
-            <div>
-              <span class="timer-pill">⏱️ Code expires in 5 minutes</span>
-            </div>
-
-            <!-- Security Advisory -->
-            <div class="notice-card">
-              <p class="notice-text">
-                <span class="notice-strong">🔒 Security Notice:</span> Never share this code with anyone. Have-it staff will never ask you for your verification code or password.
-                If you did not make this request, you can safely ignore this email.
+          <!-- Card Content Body -->
+          <tr>
+            <td style="padding: 28px 24px 20px 24px; text-align: center; background-color: #ffffff;">
+              <h2 style="margin: 0 0 10px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 700; color: #0f172a;">
+                Verification Code
+              </h2>
+              <p style="margin: 0 0 20px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #475569;">
+                Use this single-use code to sign in to your account.
               </p>
-            </div>
-          </div>
 
-          <!-- Professional Footer -->
-          <div class="footer">
-            <p style="margin: 0 0 6px 0;">This email was sent to <strong>${recipientEmail}</strong></p>
-            <p style="margin: 0 0 6px 0;">Have-it — End-to-End Real-Time Messenger & Social Network</p>
-            <p style="margin: 0;">© 2026 Have-it. All rights reserved. • Automated security notification</p>
-          </div>
-        </div>
+              <!-- Single-Line Compact OTP Box -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 0 auto; background-color: #f0f9ff; border: 1.5px dashed #0284c7; border-radius: 12px;">
+                <tr>
+                  <td style="padding: 10px 24px; text-align: center; vertical-align: middle;">
+                    <span style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 30px; font-weight: 800; letter-spacing: 7px; color: #0369a1; user-select: all; -webkit-user-select: all; display: inline-block;">
+                      ${formattedOtp}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Copy Option Notice -->
+              <div style="margin-top: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b;">
+                📋 <strong>Tap code above to select &amp; copy</strong>
+              </div>
+
+              <!-- One-Click Instant Verification Button -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 18px auto 0 auto;">
+                <tr>
+                  <td align="center">
+                    <a href="${verifyUrl}" target="_blank" style="display: inline-block; background-color: #03cafc; color: #0b141a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; text-decoration: none; padding: 10px 24px; border-radius: 10px; box-shadow: 0 2px 8px rgba(3, 202, 252, 0.35);">
+                      Verify Automatically &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Expiry & Security Notice -->
+              <div style="margin-top: 24px; padding: 12px 14px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; text-align: left;">
+                <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; line-height: 1.5; color: #64748b;">
+                  ⏱️ <strong>Valid for 5 minutes.</strong> Never share this code with anyone. If you didn't request this login, you can safely ignore this email.
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Card Footer -->
+          <tr>
+            <td align="center" style="padding: 18px 20px; background-color: #f8fafc; border-top: 1px solid #f1f5f9; text-align: center;">
+              <p style="margin: 0 0 4px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #94a3b8;">
+                Sent to <strong>${recipientEmail}</strong>
+              </p>
+              <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #94a3b8;">
+                &copy; 2026 Have-it. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
       </td>
     </tr>
   </table>

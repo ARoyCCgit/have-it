@@ -76,6 +76,19 @@
   - Updated `manifest.ts` and `layout.tsx` with Web App Manifest, Apple Web App settings, and touch icons.
   - Built `frontend/src/components/PWARegister.tsx` providing an automated install prompt banner for Android/Chrome and home screen instructions for iOS Safari.
 
+### 1.7 High-Contrast Compact Email Template & Quick-Verify Auto-Fill
+* **The Problem**:
+  - Logo was a fallback "H" badge rather than the actual Have-it logo.
+  - "Have" text blended into light/dark background colors across different email clients (e.g. Gmail / Outlook dark mode).
+  - OTP display box was overly large and clunky across viewports.
+  - No quick one-tap copy option or auto-fill button.
+* **The Solution**:
+  - Hosted actual Have-it logo permanently on user's Cloudinary CDN (`https://res.cloudinary.com/deolniqzk/image/upload/v1788779349/haveit_app_logo.png`).
+  - Implemented 100% inline-styled, bulletproof HTML email card (`#ffffff`) with `#0f172a !important;` ("Have") and `#0284c7 !important;` ("-it"), guaranteeing 100% contrast in both light & dark mode email clients.
+  - Redesigned OTP into a sleek, compact single-line badge with monospace font and generous letter-spacing.
+  - Added native tap-to-select (`user-select: all;`) and a dedicated copy instruction.
+  - Added a one-click "Verify Automatically &rarr;" button (`${frontendUrl}/verify?email=...&otp=...`) and updated `verifyOtp.tsx` to pre-fill the OTP code automatically when clicked from the email.
+
 ---
 
 ## 2. Master File Modification Registry
@@ -83,7 +96,7 @@
 | File Path | Component | Purpose of Change |
 | :--- | :--- | :--- |
 | `backend/mail/src/consumer.ts` | Mail Service | Added Brevo HTTPS API (Port 443), HTML template rendering, removed Resend. |
-| `backend/mail/src/emailTemplate.ts` | Mail Service | Professional Have-it branded HTML email template generator. |
+| `backend/mail/src/emailTemplate.ts` | Mail Service | Professional Have-it branded HTML email template with real Cloudinary logo, high contrast, compact OTP, and auto-verify link. |
 | `backend/mail/.env.example` | Mail Service | Documented `BREVO_API_KEY` and `BREVO_SENDER_EMAIL`. |
 | `backend/user/src/controller/oauth.ts` | User Service | OAuth 2.0 controller for Google & Microsoft login and user provisioning. |
 | `backend/user/src/controller/user.ts` | User Service | Added `otp` field explicitly to RabbitMQ message payload. |
@@ -100,7 +113,7 @@
 | `frontend/src/components/ChatSidebar.tsx` | Frontend | Clean full-width mobile aside layout, branding visible on all screens. |
 | `frontend/src/components/ChatInput.tsx` | Frontend | Mobile bottom sheet for emojis, dismiss backdrop, textarea font size, button ref. |
 | `frontend/src/components/EmojiPicker.tsx` | Frontend | Removed `autoFocus`, added `onClose` button, responsive sheet width. |
-| `frontend/src/components/verifyOtp.tsx` | Frontend | Mobile-safe digit box sizing (`w-10 sm:w-12`), responsive padding, 100dvh. |
+| `frontend/src/components/verifyOtp.tsx` | Frontend | Mobile-safe digit box sizing (`w-10 sm:w-12`), auto-populates OTP from query param (`?otp=123456`), responsive padding, 100dvh. |
 | `frontend/src/components/ContactInfoDrawer.tsx` | Frontend | Full-screen modal overlay on mobile (`fixed inset-0 z-50`). |
 | `frontend/src/components/GroupInfoDrawer.tsx` | Frontend | Full-screen modal overlay on mobile (`fixed inset-0 z-50`). |
 | `frontend/src/components/PWARegister.tsx` | Frontend | Service worker registration and "Install App" / "Add to Home Screen" banner. |

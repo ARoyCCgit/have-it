@@ -19,8 +19,15 @@ const VerifyOtp = () => {
 
     const searchParams = useSearchParams();
     const email: string = searchParams.get('email') || "";
+    const otpParam: string = searchParams.get('otp') || "";
 
     const router = useRouter();
+
+    useEffect(() => {
+        if (otpParam && otpParam.length === 6) {
+            setOtp(otpParam.split(''));
+        }
+    }, [otpParam]);
 
     useEffect(() => {
         if (timer > 0) {
