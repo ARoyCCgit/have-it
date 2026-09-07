@@ -98,13 +98,18 @@ The **Have-it** platform combines an end-to-end real-time messenger with a moder
 
 ---
 
-### 3.5 Gmail SMTP / Nodemailer (Transactional Mail Dispatch)
-* **What It Is**: Secure Google SMTP relay (`smtp.gmail.com:465`) orchestrated by Node.js `nodemailer`.
-* **Why We Are Using It**:
-  - Zero cost for sending login OTP verification codes to users.
-  - High inbox delivery rate (emails from Google servers rarely land in spam folders).
-* **Security Implementation**:
-  - Authenticates using a 16-character dedicated **Google App Password** (`xkycwtfokmiyovfq`), bypassing standard Google account passwords and working seamlessly with 2-Factor Authentication (2FA).
+### 3.5 Transactional Mail Dispatch (Gmail SMTP, Brevo HTTPS, Resend HTTPS)
+* **What It Is**: Multi-channel email delivery engine supporting:
+  1. **Brevo (formerly Sendinblue) HTTPS API (Port 443)**: *Recommended for Render Cloud*. Sends up to 300 emails/day to **ANY recipient address** without requiring a custom domain!
+  2. **Resend HTTPS API (Port 443)**: Sends 100 free emails/day. In sandbox mode, sends to your account email (`arnabroy466@gmail.com`). With a verified domain, sends to all recipients.
+  3. **Google Gmail SMTP (`smtp.gmail.com:465`)**: Used for local Docker / development environments via Nodemailer.
+* **Why the HTTPS API Is Essential on Cloud Providers (Render)**:
+  - Render free tier firewalls actively block all outbound raw TCP connections on SMTP ports 25, 465, and 587. Attempting to use SMTP results in an immediate `ETIMEDOUT: Connection timeout`.
+  - HTTPS APIs (Brevo & Resend) transmit email requests securely over Port 443, which is universally permitted across all cloud hosts.
+* **Configuration Switch**:
+  - If `BREVO_API_KEY` is present in `mail-service` environment, it routes via Brevo HTTPS API.
+  - Else if `RESEND_API_KEY` is present, it routes via Resend HTTPS API.
+  - Otherwise, it falls back to Nodemailer SMTP.
 
 ---
 
@@ -148,6 +153,19 @@ The **Have-it** platform combines an end-to-end real-time messenger with a moder
     * WebRTC signaling for peer-to-peer voice/video calls
 
 ---
+
+### 3.10 Social Single Sign-On (Google & Microsoft OAuth 2.0)
+* **What It Is**: Direct OAuth 2.0 / OpenID Connect authentication integration for Google Accounts and Microsoft Entra (Azure AD).
+* **Scope**: **Frontend only** (explicitly excluded from Admin panel for maximum security).
+* **User Flow**:
+  1. User clicks **"Continue with Google"** or **"Continue with Microsoft"** on `/login`.
+  2. Browser navigates to `/api/v1/auth/google` or `/api/v1/auth/microsoft` on `user-service`.
+  3. Provider prompts user for authorization and redirects back with an authorization `code`.
+  4. Backend exchanges `code` for user profile (ID, verified email, name, avatar), finds or creates user in MongoDB Atlas, generates Have-it JWT token, and redirects to `${FRONTEND_URL}/oauth-callback?token=${token}`.
+  5. The callback handler writes the token cookie and opens the main `/chat` interface.
+* **Fallback Behavior**:
+  - Standard 6-digit OTP verification code via email remains fully functional as the primary login method.
+  - If Google or Microsoft credentials have not yet been added to the backend environment, the system displays a graceful error toast without crashing.
 
 ## 4. Cross-Service Data Flow Diagram
 

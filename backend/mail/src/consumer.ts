@@ -27,8 +27,32 @@ export const startSendOtpConsumer = async()=>{
                 try {
                     const {to, subject, body} = JSON.parse(msg.content.toString());
 
-                    if (process.env.RESEND_API_KEY) {
-                        // Cloud-friendly HTTPS API (Port 443 — NEVER blocked by Render or AWS firewalls)
+                    if (process.env.BREVO_API_KEY) {
+                        // Brevo HTTPS API (Port 443 — sends to ANY email in the world without a custom domain)
+                        const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
+                            method: "POST",
+                            headers: {
+                                "api-key": process.env.BREVO_API_KEY,
+                                "Content-Type": "application/json",
+                                "Accept": "application/json",
+                            },
+                            body: JSON.stringify({
+                                sender: {
+                                    name: "Have-it",
+                                    email: process.env.BREVO_SENDER_EMAIL || process.env.Nodemailer_User || "arnabroy466@gmail.com",
+                                },
+                                to: [{ email: to }],
+                                subject: subject,
+                                textContent: body,
+                            }),
+                        });
+                        const brevoData = await brevoRes.json();
+                        if (!brevoRes.ok) {
+                            throw new Error(`Brevo API error: ${JSON.stringify(brevoData)}`);
+                        }
+                        console.log(`✅ Otp sent via Brevo HTTPS API to ${to}`);
+                    } else if (process.env.RESEND_API_KEY) {
+                        // Resend HTTPS API (Port 443 — sends to your account email in sandbox mode or all if domain added)
                         const resendRes = await fetch("https://api.resend.com/emails", {
                             method: "POST",
                             headers: {

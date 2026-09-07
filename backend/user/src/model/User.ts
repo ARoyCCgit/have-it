@@ -13,6 +13,9 @@ export interface IUser extends Document {
     isBanned: boolean;
     bannedReason?: string;
     isVerified: boolean;
+    authProvider?: "email" | "google" | "microsoft";
+    googleId?: string;
+    microsoftId?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -65,6 +68,19 @@ const schema: Schema<IUser> = new Schema({
     isVerified: {
         type: Boolean,
         default: false,
+    },
+    authProvider: {
+        type: String,
+        enum: ["email", "google", "microsoft"],
+        default: "email",
+    },
+    googleId: {
+        type: String,
+        default: "",
+    },
+    microsoftId: {
+        type: String,
+        default: "",
     },
 }, {
     timestamps: true,
