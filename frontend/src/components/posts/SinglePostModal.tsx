@@ -21,6 +21,7 @@ import type { PostData } from "./PostCard";
 import CommentsDrawer from "./CommentsDrawer";
 import LikersModal from "./LikersModal";
 import ViewersModal from "./ViewersModal";
+import { copyToClipboard } from "@/utils/clipboard";
 
 interface SinglePostModalProps {
   post: PostData | null;
@@ -314,9 +315,13 @@ export const SinglePostModal: React.FC<SinglePostModalProps> = ({
                   <MessageCircle className="w-6 h-6" />
                 </button>
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success("Link copied! 📋");
+                  onClick={async () => {
+                    const ok = await copyToClipboard(window.location.href);
+                    if (ok) {
+                      toast.success("Link copied! 📋");
+                    } else {
+                      toast.error("Failed to copy link");
+                    }
                   }}
                   className="cursor-pointer text-gray-300 hover:text-[#03cafc]"
                 >

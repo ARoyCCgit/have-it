@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { useAppData, user_service } from '@/context/Appcontext';
 import Loading from './loading';
 import toast from 'react-hot-toast';
+import { copyToClipboard } from '@/utils/clipboard';
 
 const VerifyOtp = () => {
     const { isAuth, setIsAuth, setUser, loading: userLoading, fetchChats, fetchAllUsers } = useAppData();
@@ -28,13 +29,11 @@ const VerifyOtp = () => {
         if (otpParam && otpParam.length === 6) {
             setOtp(otpParam.split(''));
             if (isCopiedAction) {
-                if (typeof navigator !== 'undefined' && navigator.clipboard) {
-                    navigator.clipboard.writeText(otpParam).then(() => {
+                copyToClipboard(otpParam).then((ok) => {
+                    if (ok) {
                         toast.success(`Verification code copied: ${otpParam}`);
-                    }).catch(() => {
-                        // clipboard write fallback
-                    });
-                }
+                    }
+                });
             }
         }
     }, [otpParam, isCopiedAction]);

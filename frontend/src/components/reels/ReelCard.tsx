@@ -23,6 +23,7 @@ import { post_service, User } from "@/context/Appcontext";
 import toast from "react-hot-toast";
 import type { PostData } from "@/components/posts/PostCard";
 import CommentsDrawer from "@/components/posts/CommentsDrawer";
+import { copyToClipboard } from "@/utils/clipboard";
 import LikersModal from "@/components/posts/LikersModal";
 
 interface ReelCardProps {
@@ -405,9 +406,13 @@ export const ReelCard: React.FC<ReelCardProps> = ({
 
         {/* Share Button */}
         <button
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-            toast.success("Reel link copied! 📋");
+          onClick={async () => {
+            const ok = await copyToClipboard(window.location.href);
+            if (ok) {
+              toast.success("Reel link copied! 📋");
+            } else {
+              toast.error("Failed to copy link");
+            }
           }}
           className="p-2.5 bg-black/40 hover:bg-black/70 backdrop-blur-md rounded-full transition-transform active:scale-90 cursor-pointer"
         >

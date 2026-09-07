@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import AudioPlayer from './AudioPlayer';
 import HaveItLogo from './HaveItLogo';
 import { MessageStreamSkeleton } from './Skeleton';
+import { copyToClipboard } from '@/utils/clipboard';
 
 interface ChatMessagesProps {
   selectedUser: string | null;
@@ -79,14 +80,18 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   // Close menus on outside click without interfering with menu triggers
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('.message-action-menu') && !target.closest('.message-action-trigger')) {
+      if (!target?.closest?.('.message-action-menu') && !target?.closest?.('.message-action-trigger')) {
         setActiveMenuMessageId(null);
       }
     };
     document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
+    };
   }, []);
 
   // Deduplicate messages by _id
@@ -206,6 +211,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                   key={e._id}
                   onMouseEnter={() => setHoveredMessageId(e._id)}
                   onMouseLeave={() => setHoveredMessageId(null)}
+                  onClick={() => setHoveredMessageId((prev) => (prev === e._id ? null : e._id))}
                   className={`flex items-end gap-1.5 ${
                     isSendByMe ? 'justify-end' : 'justify-start'
                   } group relative transition-all w-full max-w-full`}
@@ -309,18 +315,25 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                       </button>
 
                       {/* Copy Text Option */}
-                      {e.text && !isDeleted && (
+                      {(e.text || e.image?.url) && !isDeleted && (
                         <button
                           type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText(e.text || '');
-                            toast.success('Copied to clipboard');
+                          onClick={async (ev) => {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            const toCopy = e.text || e.image?.url || '';
+                            const ok = await copyToClipboard(toCopy);
+                            if (ok) {
+                              toast.success(e.text ? 'Copied to clipboard' : 'Link copied to clipboard');
+                            } else {
+                              toast.error('Failed to copy to clipboard');
+                            }
                             setActiveMenuMessageId(null);
                           }}
                           className="w-full flex items-center gap-2.5 px-3 py-2 text-gray-200 hover:bg-[#111b21] transition-colors text-left cursor-pointer"
                         >
                           <Copy className="w-4 h-4 text-[#03cafc]" />
-                          <span>Copy message</span>
+                          <span>{e.text ? 'Copy message' : 'Copy link'}</span>
                         </button>
                       )}
 

@@ -26,6 +26,7 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import { TableSkeleton } from "@/components/Skeleton";
+import { copyToClipboard } from "@/lib/clipboard";
 
 interface ApiKeyItem {
   _id: string;
@@ -688,11 +689,15 @@ export default function WebhooksPage() {
                     />
                     <button
                       type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(createdRawKey);
-                        setCopiedKey(true);
-                        setTimeout(() => setCopiedKey(false), 2000);
-                        toast.success("API Key copied to clipboard!");
+                      onClick={async () => {
+                        const ok = await copyToClipboard(createdRawKey);
+                        if (ok) {
+                          setCopiedKey(true);
+                          setTimeout(() => setCopiedKey(false), 2000);
+                          toast.success("API Key copied to clipboard!");
+                        } else {
+                          toast.error("Failed to copy API Key");
+                        }
                       }}
                       className="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1.5 bg-[#03cafc] text-slate-950 font-bold text-xs rounded-lg flex items-center gap-1 cursor-pointer"
                     >

@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import LikersModal from "./LikersModal";
 import ViewersModal from "./ViewersModal";
 import CommentsDrawer from "./CommentsDrawer";
+import { copyToClipboard } from "@/utils/clipboard";
 
 export interface PostMedia {
   url: string;
@@ -461,10 +462,12 @@ export const PostCard: React.FC<PostCardProps> = ({
 
             {/* Share */}
             <button
-              onClick={() => {
-                if (navigator.clipboard) {
-                  navigator.clipboard.writeText(window.location.href);
+              onClick={async () => {
+                const ok = await copyToClipboard(window.location.href);
+                if (ok) {
                   toast.success("Post link copied to clipboard! 📋");
+                } else {
+                  toast.error("Failed to copy link");
                 }
               }}
               className="text-gray-300 hover:text-[#03cafc] transition-colors cursor-pointer"
