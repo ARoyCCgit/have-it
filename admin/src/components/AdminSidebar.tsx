@@ -118,14 +118,14 @@ export const AdminSidebar: React.FC = () => {
       {/* Bottom User Profile & Consumer App Link */}
       <div className="p-3 border-t border-slate-800 space-y-2">
         <a
-          href="http://localhost:3000"
+          href={process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000"}
           target="_blank"
           rel="noreferrer"
           className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-[#03cafc] hover:bg-slate-900 transition-colors cursor-pointer"
         >
           <span className="flex items-center gap-2">
             <ExternalLink className="w-3.5 h-3.5" />
-            <span>Open Consumer App (:3000)</span>
+            <span>Open Consumer App</span>
           </span>
         </a>
 

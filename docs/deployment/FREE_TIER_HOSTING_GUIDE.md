@@ -156,6 +156,7 @@ Repeat the same steps for the admin panel:
    NEXT_PUBLIC_USER_SERVICE=https://haveit-user-service.onrender.com
    NEXT_PUBLIC_CHAT_SERVICE=https://haveit-chat-service.onrender.com
    NEXT_PUBLIC_POST_SERVICE=https://haveit-post-service.onrender.com
+   NEXT_PUBLIC_FRONTEND_URL=https://<your-frontend-app>.vercel.app
    PORT=3001
    ```
 4. Click **Deploy**.
