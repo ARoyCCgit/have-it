@@ -152,18 +152,18 @@ The **Have-it** platform combines an end-to-end real-time messenger with a moder
 
 ---
 
-### 3.10 Social Single Sign-On (Google & Microsoft OAuth 2.0)
-* **What It Is**: Direct OAuth 2.0 / OpenID Connect authentication integration for Google Accounts and Microsoft Entra (Azure AD).
+### 3.10 Social Single Sign-On (Google OAuth 2.0)
+* **What It Is**: Direct OAuth 2.0 / OpenID Connect authentication integration for Google Accounts.
 * **Scope**: **Frontend only** (explicitly excluded from Admin panel for maximum security).
 * **User Flow**:
-  1. User clicks **"Continue with Google"** or **"Continue with Microsoft"** on `/login`.
-  2. Browser navigates to `/api/v1/auth/google` or `/api/v1/auth/microsoft` on `user-service`.
-  3. Provider prompts user for authorization and redirects back with an authorization `code`.
-  4. Backend exchanges `code` for user profile (ID, verified email, name, avatar), finds or creates user in MongoDB Atlas, generates Have-it JWT token, and redirects to `${FRONTEND_URL}/oauth-callback?token=${token}`.
+  1. User clicks **"Continue with Google"** on `/login`.
+  2. Browser navigates to `/api/v1/auth/google` on `user-service`.
+  3. Google prompts user for authorization and redirects back to `/api/v1/auth/google/callback` with an authorization `code`.
+  4. Backend exchanges `code` for user profile (Google ID, verified email, name, avatar), finds or creates user in MongoDB Atlas, generates Have-it JWT token, and redirects to `${FRONTEND_URL}/oauth-callback?token=${token}`.
   5. The callback handler writes the token cookie and opens the main `/chat` interface.
 * **Fallback Behavior**:
-  - Standard 6-digit OTP verification code via email remains fully functional as the primary login method.
-  - If Google or Microsoft credentials have not yet been added to the backend environment, the system displays a graceful error toast without crashing.
+  - Standard 6-digit OTP verification code via email remains fully functional as the alternative login method.
+  - If Google credentials have not yet been added to the backend environment, the system displays a graceful error toast without crashing.
 
 ## 4. Cross-Service Data Flow Diagram
 

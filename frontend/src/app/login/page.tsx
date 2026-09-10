@@ -13,7 +13,7 @@ const LoginForm = () => {
     const { isAuth, loading: userLoading } = useAppData();
     const [email, setEmail] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [oauthLoading, setOauthLoading] = useState<"google" | "microsoft" | null>(null);
+    const [oauthLoading, setOauthLoading] = useState<boolean>(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -47,13 +47,8 @@ const LoginForm = () => {
     };
 
     const handleGoogleLogin = () => {
-        setOauthLoading("google");
+        setOauthLoading(true);
         window.location.href = `${user_service}/api/v1/auth/google`;
-    };
-
-    const handleMicrosoftLogin = () => {
-        setOauthLoading("microsoft");
-        window.location.href = `${user_service}/api/v1/auth/microsoft`;
     };
 
     if (userLoading) return <Loading />;
@@ -71,7 +66,7 @@ const LoginForm = () => {
                             Welcome to <span className="text-[#03cafc]">Have-it</span>
                         </h1>
                         <p className="text-gray-400 text-xs sm:text-sm">
-                            Sign in with your preferred account or email.
+                            Sign in with your Google account or email.
                         </p>
                     </div>
 
@@ -82,16 +77,15 @@ const LoginForm = () => {
                         </div>
                     )}
 
-                    {/* Social OAuth Providers */}
-                    <div className="space-y-3 mb-6">
-                        {/* Google Sign-In */}
+                    {/* Google OAuth Provider */}
+                    <div className="mb-6">
                         <button
                             type="button"
                             onClick={handleGoogleLogin}
-                            disabled={loading || oauthLoading !== null}
+                            disabled={loading || oauthLoading}
                             className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-700/80 hover:border-[#03cafc]/50 bg-[#202c33] hover:bg-[#2a3942] text-white font-medium text-sm transition-all shadow-md active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         >
-                            {oauthLoading === "google" ? (
+                            {oauthLoading ? (
                                 <Loader2 className="w-5 h-5 animate-spin text-[#03cafc]" />
                             ) : (
                                 <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -102,26 +96,6 @@ const LoginForm = () => {
                                 </svg>
                             )}
                             <span>Continue with Google</span>
-                        </button>
-
-                        {/* Microsoft Sign-In */}
-                        <button
-                            type="button"
-                            onClick={handleMicrosoftLogin}
-                            disabled={loading || oauthLoading !== null}
-                            className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-700/80 hover:border-[#03cafc]/50 bg-[#202c33] hover:bg-[#2a3942] text-white font-medium text-sm transition-all shadow-md active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                        >
-                            {oauthLoading === "microsoft" ? (
-                                <Loader2 className="w-5 h-5 animate-spin text-[#03cafc]" />
-                            ) : (
-                                <svg className="w-5 h-5" viewBox="0 0 23 23">
-                                    <path fill="#f35325" d="M1 1h10v10H1z" />
-                                    <path fill="#81bc06" d="M12 1h10v10H12z" />
-                                    <path fill="#05a6f0" d="M1 12h10v10H1z" />
-                                    <path fill="#ffba08" d="M12 12h10v10H12z" />
-                                </svg>
-                            )}
-                            <span>Continue with Microsoft</span>
                         </button>
                     </div>
 
@@ -153,7 +127,7 @@ const LoginForm = () => {
                         <button
                             type="submit"
                             className="w-full bg-[#03cafc] hover:bg-[#029ecc] text-[#0b141a] py-3.5 px-6 rounded-xl font-bold transition-all shadow-lg shadow-[#03cafc]/25 hover:shadow-[#03cafc]/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                            disabled={loading || oauthLoading !== null}
+                            disabled={loading || oauthLoading}
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center gap-2">

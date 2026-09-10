@@ -50,8 +50,7 @@ self.addEventListener('fetch', (event) => {
     url.pathname.startsWith('/socket.io') ||
     url.hostname.includes('cloudinary') ||
     url.hostname.includes('onrender.com') ||
-    url.hostname.includes('google') ||
-    url.hostname.includes('microsoft')
+    url.hostname.includes('google')
   ) {
     return;
   }

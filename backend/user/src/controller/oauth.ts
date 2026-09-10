@@ -22,20 +22,12 @@ const getGoogleRedirectUri = (req: Request): string => {
     return `${getBackendBaseUrl(req)}/api/v1/auth/google/callback`;
 };
 
-const getMicrosoftRedirectUri = (req: Request): string => {
-    if (process.env.MICROSOFT_CALLBACK_URL) {
-        return process.env.MICROSOFT_CALLBACK_URL;
-    }
-    return `${getBackendBaseUrl(req)}/api/v1/auth/microsoft/callback`;
-};
-
 /**
  * Check which OAuth providers are configured on this server
  */
 export const getOAuthProviders = (_req: Request, res: Response): void => {
     res.json({
         google: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
-        microsoft: Boolean(process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET),
     });
 };
 
@@ -171,137 +163,5 @@ export const googleCallback = async (req: Request, res: Response): Promise<void>
     } catch (err: unknown) {
         console.error("Error in googleCallback:", err);
         res.redirect(`${frontend}/login?error=${encodeURIComponent("An unexpected error occurred during Google Sign-In.")}`);
-    }
-};
-
-/**
- * 3. Microsoft OAuth — Initiates Microsoft Sign-In redirect
- */
-export const microsoftAuth = (req: Request, res: Response): void => {
-    const clientId = process.env.MICROSOFT_CLIENT_ID;
-    const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
-    const frontend = getFrontendUrl();
-
-    if (!clientId || !clientSecret) {
-        const errorMsg = "Microsoft Sign-In is not configured yet. Please add MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET to environment variables.";
-        res.redirect(`${frontend}/login?error=${encodeURIComponent(errorMsg)}`);
-        return;
-    }
-
-    const redirectUri = getMicrosoftRedirectUri(req);
-    const msAuthUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize");
-    msAuthUrl.searchParams.set("client_id", clientId);
-    msAuthUrl.searchParams.set("response_type", "code");
-    msAuthUrl.searchParams.set("redirect_uri", redirectUri);
-    msAuthUrl.searchParams.set("response_mode", "query");
-    msAuthUrl.searchParams.set("scope", "openid email profile User.Read");
-    msAuthUrl.searchParams.set("prompt", "select_account");
-
-    res.redirect(msAuthUrl.toString());
-};
-
-/**
- * 4. Microsoft OAuth Callback — Exchanges auth code, creates/links user, redirects with token
- */
-export const microsoftCallback = async (req: Request, res: Response): Promise<void> => {
-    const frontend = getFrontendUrl();
-    const { code, error, error_description } = req.query;
-
-    if (error) {
-        const msg = String(error_description || error || "Microsoft Sign-In was cancelled.");
-        res.redirect(`${frontend}/login?error=${encodeURIComponent(msg)}`);
-        return;
-    }
-
-    if (!code) {
-        res.redirect(`${frontend}/login?error=${encodeURIComponent("No authorization code received from Microsoft.")}`);
-        return;
-    }
-
-    try {
-        const clientId = process.env.MICROSOFT_CLIENT_ID!;
-        const clientSecret = process.env.MICROSOFT_CLIENT_SECRET!;
-        const redirectUri = getMicrosoftRedirectUri(req);
-
-        // Exchange code for Microsoft Access Token
-        const tokenResponse = await fetch("https://login.microsoftonline.com/common/oauth2/v2.0/token", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                client_id: clientId,
-                client_secret: clientSecret,
-                code: String(code),
-                redirect_uri: redirectUri,
-                grant_type: "authorization_code",
-            }).toString(),
-        });
-
-        const tokenData = (await tokenResponse.json()) as { access_token?: string; error?: string };
-        if (!tokenResponse.ok || !tokenData.access_token) {
-            console.error("Microsoft Token Exchange failed:", tokenData);
-            res.redirect(`${frontend}/login?error=${encodeURIComponent("Failed to exchange code with Microsoft.")}`);
-            return;
-        }
-
-        // Fetch User Profile from Microsoft Graph API
-        const userResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
-            headers: {
-                Authorization: `Bearer ${tokenData.access_token}`,
-            },
-        });
-
-        const profile = (await userResponse.json()) as {
-            id?: string;
-            displayName?: string;
-            mail?: string;
-            userPrincipalName?: string;
-        };
-
-        const rawEmail = profile.mail || profile.userPrincipalName;
-        if (!userResponse.ok || !rawEmail) {
-            console.error("Microsoft UserInfo failed:", profile);
-            res.redirect(`${frontend}/login?error=${encodeURIComponent("Could not retrieve email from Microsoft profile.")}`);
-            return;
-        }
-
-        const email = rawEmail.toLowerCase().trim();
-        let user = await User.findOne({ email });
-
-        if (!user) {
-            user = await User.create({
-                name: profile.displayName?.trim() || email.split("@")[0] || "User",
-                email,
-                avatar: { url: "" },
-                isVerified: true,
-                authProvider: "microsoft",
-                microsoftId: profile.id || "",
-            });
-        } else {
-            let needsSave = false;
-            if (!user.microsoftId && profile.id) {
-                user.microsoftId = profile.id;
-                needsSave = true;
-            }
-            if (!user.isVerified) {
-                user.isVerified = true;
-                needsSave = true;
-            }
-            if (needsSave) {
-                await user.save();
-            }
-        }
-
-        if (user.isBanned) {
-            res.redirect(`${frontend}/login?error=${encodeURIComponent("Your account has been suspended. Please contact Have-it support.")}`);
-            return;
-        }
-
-        const token = generateToken(user);
-        res.redirect(`${frontend}/oauth-callback?token=${encodeURIComponent(token)}`);
-    } catch (err: unknown) {
-        console.error("Error in microsoftCallback:", err);
-        res.redirect(`${frontend}/login?error=${encodeURIComponent("An unexpected error occurred during Microsoft Sign-In.")}`);
     }
 };

@@ -15,7 +15,6 @@ export const getOtpEmailHtml = (
   const rawOtp = String(otp).trim();
   const formattedOtp = rawOtp.split("").join(" ");
   const logoUrl = "https://res.cloudinary.com/deolniqzk/image/upload/v1788779349/haveit_app_logo.png";
-  const copyIconUrl = "https://res.cloudinary.com/deolniqzk/image/upload/v1788780730/haveit/haveit_copy_icon.png";
 
   return `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -61,25 +60,20 @@ export const getOtpEmailHtml = (
                 Use this single-use code to sign in to your account.
               </p>
 
-              <!-- Compact 16px OTP Box with Copy Icon (No Redirect, Instant 1-Tap Select) -->
+              <!-- Clean 16px OTP Box -->
               <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 0 auto; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
                 <tr>
-                  <td style="padding: 10px 14px 10px 18px; vertical-align: middle; text-align: center;">
+                  <td style="padding: 10px 24px; vertical-align: middle; text-align: center;">
                     <span style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 16px; font-weight: 700; letter-spacing: 5px; color: #0f172a; user-select: all; -webkit-user-select: all; -moz-user-select: all; -ms-user-select: all; display: inline-block;">
                       ${formattedOtp}
-                    </span>
-                  </td>
-                  <td style="padding: 6px 14px 6px 0; vertical-align: middle;">
-                    <span style="display: inline-block; padding: 4px 6px; background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; vertical-align: middle;">
-                      <img src="${copyIconUrl}" width="16" height="16" alt="Copy" style="display: block; width: 16px; height: 16px; border: 0;" />
                     </span>
                   </td>
                 </tr>
               </table>
 
               <!-- Copy Instruction -->
-              <div style="margin-top: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b;">
-                📋 Tap or double-click code to copy
+              <div style="margin-top: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b;">
+                Tap to copy
               </div>
 
               <!-- Expiry & Security Notice -->

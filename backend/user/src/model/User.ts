@@ -13,9 +13,8 @@ export interface IUser extends Document {
     isBanned: boolean;
     bannedReason?: string;
     isVerified: boolean;
-    authProvider?: "email" | "google" | "microsoft";
+    authProvider?: "email" | "google";
     googleId?: string;
-    microsoftId?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -71,14 +70,10 @@ const schema: Schema<IUser> = new Schema({
     },
     authProvider: {
         type: String,
-        enum: ["email", "google", "microsoft"],
+        enum: ["email", "google"],
         default: "email",
     },
     googleId: {
-        type: String,
-        default: "",
-    },
-    microsoftId: {
         type: String,
         default: "",
     },

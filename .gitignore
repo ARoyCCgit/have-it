@@ -17,6 +17,10 @@ node_modules/
 **/.env
 **/.env.local
 **/.env*.local
+docs/credential oAuth/
+**/credential oAuth/
+*OAuth*.json
+*oauth*.json
 
 # Allow example files
 !**/.env.example

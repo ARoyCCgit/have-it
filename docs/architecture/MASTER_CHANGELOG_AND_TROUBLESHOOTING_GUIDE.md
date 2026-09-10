@@ -34,13 +34,14 @@
   - Includes Have-it electric cyan gradient badge, "Have-it Messenger" title, large monospace OTP digits card (`1 2 3  4 5 6`), 5-minute expiry pill, and security disclaimer.
   - Tested across Gmail, Apple Mail, Outlook, and Yahoo.
 
-### 1.3 Social Single Sign-On (Google & Microsoft OAuth 2.0)
-* **User Requirement**: *"continue with google, continue with microsoft and normal login which already have. only on frontend not in admin."*
+### 1.3 Social Single Sign-On (Google OAuth 2.0)
+* **User Requirement**: *"remove the microsoft login thing. only need google login"*
 * **The Solution**:
-  - Built `backend/user/src/controller/oauth.ts` supporting standard OAuth 2.0 / OpenID Connect token exchange over Port 443.
-  - Registered `/api/v1/auth/google`, `/api/v1/auth/google/callback`, `/api/v1/auth/microsoft`, and `/api/v1/auth/microsoft/callback`.
+  - Maintained `backend/user/src/controller/oauth.ts` supporting standard Google OAuth 2.0 / OpenID Connect token exchange over Port 443.
+  - Registered `/api/v1/auth/google` and `/api/v1/auth/google/callback`.
+  - Removed all Microsoft Azure/Entra OAuth endpoints, routes, and UI buttons.
   - Added `frontend/src/app/oauth-callback/page.tsx` and `OAuthCallbackHandler.tsx` to set auth cookies and load profile.
-  - Added branded buttons with official SVG logos on `frontend/src/app/login/page.tsx`.
+  - Added Google branded button with official SVG logo on `frontend/src/app/login/page.tsx`.
   - Admin portal is completely untouched and isolated.
 
 ### 1.4 Mobile-First Responsive Layout Overhaul
@@ -153,13 +154,13 @@
 
 ---
 
-### Error 3: Google / Microsoft OAuth shows "Not configured" toast
-* **Symptoms**: User clicks "Continue with Google" or "Continue with Microsoft" and sees:
+### Error 3: Google OAuth shows "Not configured" toast
+* **Symptoms**: User clicks "Continue with Google" and sees:
   ```
   Google Sign-In is not configured yet. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to environment variables.
   ```
-* **Why it happens**: The backend endpoints check if `GOOGLE_CLIENT_ID` / `MICROSOFT_CLIENT_ID` are set. If not, they safely redirect with an informative error rather than crashing.
-* **Exact Fix**: Add the client IDs and secrets to `backend/user/.env` and Render `user-service` environment.
+* **Why it happens**: The backend endpoints check if `GOOGLE_CLIENT_ID` is set. If not, they safely redirect with an informative error rather than crashing.
+* **Exact Fix**: Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to `backend/user/.env` and Render `user-service` environment.
 
 ---
 
@@ -202,8 +203,6 @@ JWT_TOKEN=your_jwt_secret
 FRONTEND_URL=https://have-it-super-app.vercel.app
 GOOGLE_CLIENT_ID=your_id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=GOCSPX-your_secret
-MICROSOFT_CLIENT_ID=your_id
-MICROSOFT_CLIENT_SECRET=your_secret
 ```
 
 ---
