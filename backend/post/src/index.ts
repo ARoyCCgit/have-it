@@ -2,9 +2,11 @@ import express from "express";
 import http from "http";
 import dotenv from "dotenv";
 import cors from "cors";
+import mongoose from "mongoose";
 import connectDB from "./config/db.js";
-import { connectRedis } from "./config/redis.js";
+import { connectRedis, getRedisStatus } from "./config/redis.js";
 import { initPostSocket } from "./socket.js";
+import { ensureDatabaseConnected } from "./middlewares/dbCheck.js";
 import postRouter from "./router/post.js";
 import storyRouter from "./router/story.js";
 
@@ -27,18 +29,28 @@ app.use(
     })
 );
 
-// Health check root endpoint
+// Health check root endpoint with real-time diagnostics
 app.get("/", (req, res) => {
+    const readyState = mongoose.connection.readyState;
+    const states: { [key: number]: string } = {
+        0: "disconnected",
+        1: "connected",
+        2: "connecting",
+        3: "disconnecting",
+    };
     res.status(200).json({
         message: "Have-it Posts & Social Hub Microservice is running",
         port,
         version: "1.0.0",
+        database: states[readyState] || "unknown",
+        mongoUriConfigured: Boolean(process.env.MONGO_URI),
+        redisConnected: getRedisStatus(),
     });
 });
 
-// Mount Routes
-app.use("/api/v1/posts", postRouter);
-app.use("/api/v1/stories", storyRouter);
+// Mount Routes with automatic DB connection guard
+app.use("/api/v1/posts", ensureDatabaseConnected, postRouter);
+app.use("/api/v1/stories", ensureDatabaseConnected, storyRouter);
 
 // Initialize HTTP & Socket.IO server
 const server = http.createServer(app);

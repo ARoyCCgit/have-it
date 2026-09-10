@@ -177,9 +177,10 @@ export const initSocket = (httpServer: HttpServer): Server => {
       signalData: any;
     }) => {
       if (!userToCall) return;
-      console.log(`📞 Call initiated from ${from} (${name}) to user ${userToCall}. Video: ${isVideo}`);
+      const senderId = from || currentUserId || socket.data?.user?._id?.toString();
+      console.log(`📞 Call initiated from ${senderId} (${name}) to user ${userToCall}. Video: ${isVideo}`);
       io?.to(`user:${userToCall.toString()}`).emit("call_incoming", {
-        from,
+        from: senderId,
         name,
         avatar,
         isVideo,
@@ -188,37 +189,41 @@ export const initSocket = (httpServer: HttpServer): Server => {
       });
     });
 
-    socket.on("call_accepted", ({ to, signal }: { to: string; signal: any }) => {
+    socket.on("call_accepted", ({ to, signal, from }: { to: string; signal: any; from?: string }) => {
       if (!to) return;
-      console.log(`✅ Call accepted by user ${currentUserId} for user ${to}`);
+      const senderId = from || currentUserId || socket.data?.user?._id?.toString();
+      console.log(`✅ Call accepted by user ${senderId} for user ${to}`);
       io?.to(`user:${to.toString()}`).emit("call_accepted", {
         signal,
-        from: currentUserId,
+        from: senderId,
       });
     });
 
-    socket.on("call_rejected", ({ to, reason }: { to: string; reason?: string }) => {
+    socket.on("call_rejected", ({ to, reason, from }: { to: string; reason?: string; from?: string }) => {
       if (!to) return;
-      console.log(`🚫 Call rejected by user ${currentUserId} to user ${to}`);
+      const senderId = from || currentUserId || socket.data?.user?._id?.toString();
+      console.log(`🚫 Call rejected by user ${senderId} to user ${to}`);
       io?.to(`user:${to.toString()}`).emit("call_rejected", {
-        from: currentUserId,
+        from: senderId,
         reason: reason || "Call declined",
       });
     });
 
-    socket.on("ice_candidate", ({ to, candidate }: { to: string; candidate: any }) => {
+    socket.on("ice_candidate", ({ to, candidate, from }: { to: string; candidate: any; from?: string }) => {
       if (!to || !candidate) return;
+      const senderId = from || currentUserId || socket.data?.user?._id?.toString();
       io?.to(`user:${to.toString()}`).emit("ice_candidate", {
         candidate,
-        from: currentUserId,
+        from: senderId,
       });
     });
 
-    socket.on("end_call", ({ to }: { to: string }) => {
+    socket.on("end_call", ({ to, from }: { to: string; from?: string }) => {
       if (!to) return;
-      console.log(`📴 Call ended by user ${currentUserId} with user ${to}`);
+      const senderId = from || currentUserId || socket.data?.user?._id?.toString();
+      console.log(`📴 Call ended by user ${senderId} with user ${to}`);
       io?.to(`user:${to.toString()}`).emit("call_ended", {
-        from: currentUserId,
+        from: senderId,
       });
     });
 

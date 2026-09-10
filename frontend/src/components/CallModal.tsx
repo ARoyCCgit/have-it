@@ -41,11 +41,15 @@ export const CallModal: React.FC = () => {
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteAudioRef = useRef<HTMLAudioElement>(null);
 
   // Attach local stream to video element
   useEffect(() => {
     if (localVideoRef.current && localStream) {
       localVideoRef.current.srcObject = localStream;
+      localVideoRef.current.play().catch((err) => {
+        console.warn("Local video autoplay caught:", err);
+      });
     }
   }, [localStream, isCameraOff, isScreenSharing]);
 
@@ -53,6 +57,19 @@ export const CallModal: React.FC = () => {
   useEffect(() => {
     if (remoteVideoRef.current && remoteStream) {
       remoteVideoRef.current.srcObject = remoteStream;
+      remoteVideoRef.current.play().catch((err) => {
+        console.warn("Remote video autoplay caught:", err);
+      });
+    }
+  }, [remoteStream, callStatus, callData?.isVideo]);
+
+  // Dedicated Audio Element: Guarantees remote audio plays in voice calls and background
+  useEffect(() => {
+    if (remoteAudioRef.current && remoteStream) {
+      remoteAudioRef.current.srcObject = remoteStream;
+      remoteAudioRef.current.play().catch((err) => {
+        console.warn("Remote audio autoplay caught:", err);
+      });
     }
   }, [remoteStream, callStatus]);
 
@@ -69,6 +86,9 @@ export const CallModal: React.FC = () => {
         onClick={() => setIsMinimized(false)}
         className="fixed bottom-6 right-6 z-50 bg-[#202c33] border-2 border-[#03cafc] rounded-2xl shadow-2xl shadow-[#03cafc]/20 p-3 flex items-center gap-3 cursor-pointer hover:scale-105 transition-all animate-in fade-in select-none"
       >
+        {/* Hidden Audio element keeping call audio alive while minimized */}
+        <audio ref={remoteAudioRef} autoPlay playsInline className="hidden" />
+
         <div className="w-10 h-10 rounded-full bg-[#111b21] flex items-center justify-center overflow-hidden border border-[#03cafc]/60">
           {callData.targetAvatar ? (
             <img src={callData.targetAvatar} alt={callData.targetName} className="w-full h-full object-cover" />
@@ -100,6 +120,9 @@ export const CallModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-[#111b21]/95 backdrop-blur-md flex flex-col items-center justify-between p-4 sm:p-6 select-none animate-in fade-in duration-200">
+      {/* Hidden Audio element for voice playback */}
+      <audio ref={remoteAudioRef} autoPlay playsInline className="hidden" />
+
       {/* Top Header Bar */}
       <div className="w-full max-w-4xl flex items-center justify-between z-20">
         <div className="flex items-center gap-2 text-gray-300 text-xs bg-[#202c33]/80 px-3 py-1.5 rounded-full border border-gray-700/60 shadow-sm">
